@@ -174,21 +174,28 @@ Each endpoint page should include:
 
 ## Claude Code Configuration
 
-### Commands
+### Commands (`.claude/commands/`)
 
-This repo does not have custom slash commands yet.
+| Command | Description |
+|---------|-------------|
+| `/preview` | Start Astro dev server on localhost:4321 |
+| `/build` | Production build to `dist/` directory |
+| `/validate` | Validate docs structure, links, and OpenAPI spec |
+| `/sync-api` | Verify docs match actual API behavior |
 
-### MCP Tools
+### MCP Tools (`.mcp.json`)
 
-For documentation work, use:
-- `time` - Date calculations for versioning
-- `github` - PR management, issue tracking
+| Tool | Use For |
+|------|---------|
+| `time` | Date calculations for versioning |
+| `calculator` | Token/pricing calculations |
+| `github` | PR management, issue tracking |
 
 ### Permissions
 
 Standard documentation site permissions:
 - File read/write in `src/`, `public/`
-- npm commands
+- npm commands (`npm install`, `npm run dev`, `npm run build`)
 - Git operations
 
 ---
@@ -208,4 +215,4 @@ Standard documentation site permissions:
 
 ---
 
-**Version**: 1.0 | **Created**: January 16, 2026
+**Version**: 1.1 | **Updated**: January 16, 2026
