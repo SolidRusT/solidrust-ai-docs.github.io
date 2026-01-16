@@ -1,0 +1,48 @@
+---
+title: SolidRusT AI Documentation
+description: Complete API documentation for the SolidRusT AI inference platform
+template: splash
+hero:
+  tagline: Enterprise-grade AI inference API with OpenAI-compatible endpoints
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get Started
+      link: /getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: API Reference
+      link: /api/overview/
+      variant: secondary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Quick Links
+
+<CardGrid stagger>
+  <Card title="Chat Completions" icon="pencil">
+    Generate text responses using our AI models with the `/v1/chat/completions` endpoint.
+    [Learn more](/api/chat-completions/)
+  </Card>
+  <Card title="Embeddings" icon="document">
+    Create vector embeddings for semantic search and RAG applications.
+    [Learn more](/api/embeddings/)
+  </Card>
+  <Card title="Python SDK" icon="seti:python">
+    Official Python client library with async support.
+    [Get started](/sdks/python/)
+  </Card>
+  <Card title="JavaScript SDK" icon="seti:javascript">
+    TypeScript-first SDK for Node.js and browser environments.
+    [Get started](/sdks/javascript/)
+  </Card>
+</CardGrid>
+
+## Features
+
+- **OpenAI-Compatible API** - Drop-in replacement for OpenAI API calls
+- **Local Inference** - Models run on dedicated GPU infrastructure
+- **Failover Support** - Automatic failover to cloud providers when needed
+- **RAG Integration** - Built-in data layer for retrieval-augmented generation
+- **Tool Calling** - Native function/tool calling support for agent applications

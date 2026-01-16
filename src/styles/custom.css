@@ -1,0 +1,80 @@
+/* Custom styles for SolidRusT AI docs */
+/* Uses Starlight's CSS custom properties for theming */
+
+/* Custom brand colors */
+:root {
+  --sl-color-accent-low: #002244;
+  --sl-color-accent: #0066cc;
+  --sl-color-accent-high: #b4d7ff;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #eceef2;
+  --sl-color-gray-2: #c0c2c7;
+  --sl-color-gray-3: #888b96;
+  --sl-color-gray-4: #545861;
+  --sl-color-gray-5: #353841;
+  --sl-color-gray-6: #24272f;
+  --sl-color-black: #17181c;
+}
+
+/* Dark mode colors */
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #003366;
+  --sl-color-accent: #0088ff;
+  --sl-color-accent-high: #b4d7ff;
+}
+
+/* Code block styling */
+.expressive-code pre {
+  border-radius: 0.5rem;
+}
+
+/* API endpoint styling */
+.api-endpoint {
+  background-color: var(--sl-color-gray-6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.api-method {
+  font-family: var(--sl-font-mono);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.api-method-get {
+  color: #22c55e;
+}
+
+.api-method-post {
+  color: #3b82f6;
+}
+
+.api-method-delete {
+  color: #ef4444;
+}
+
+/* Response code badges */
+.response-code {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.response-code-2xx {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.response-code-4xx {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.response-code-5xx {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
