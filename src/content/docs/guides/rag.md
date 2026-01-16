@@ -15,15 +15,16 @@ RAG enhances LLM responses by:
 
 ## SolidRusT AI Data Layer
 
-:::note[Coming Soon]
-Full data layer documentation will be available here.
-:::
+The SolidRusT AI platform includes a built-in data layer with multiple query types:
 
-The SolidRusT AI platform includes a built-in data layer for RAG applications:
+| Endpoint | Description |
+|----------|-------------|
+| `POST /data/v1/query/semantic` | Vector similarity search |
+| `POST /data/v1/query/keyword` | Full-text keyword search |
+| `POST /data/v1/query/hybrid` | Combined semantic + knowledge graph |
+| `POST /data/v1/query/knowledge-graph` | Entity relationship traversal |
 
-```
-POST /data/query
-```
+See the [OpenAPI Reference](/api-reference/) for full request/response schemas.
 
 ## Basic RAG Pattern
 
