@@ -1,7 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { execSync } from 'child_process';
 import starlight from '@astrojs/starlight';
 import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi';
+
+// Get git info for build version display
+const getGitInfo = () => {
+  try {
+    const commitHash = execSync('git rev-parse --short HEAD').toString().trim();
+    const commitDate = execSync('git log -1 --format=%ci').toString().trim();
+    return { commitHash, commitDate };
+  } catch {
+    return { commitHash: 'dev', commitDate: new Date().toISOString() };
+  }
+};
+const gitInfo = getGitInfo();
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,6 +23,9 @@ export default defineConfig({
 
   integrations: [
     starlight({
+      components: {
+        Footer: './src/components/Footer.astro',
+      },
       plugins: [
         starlightOpenAPI([
           {
@@ -95,5 +111,12 @@ export default defineConfig({
 
   build: {
     assets: 'assets',
+  },
+
+  vite: {
+    define: {
+      __BUILD_COMMIT__: JSON.stringify(gitInfo.commitHash),
+      __BUILD_DATE__: JSON.stringify(gitInfo.commitDate),
+    },
   },
 });

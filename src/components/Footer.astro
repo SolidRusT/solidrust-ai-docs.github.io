@@ -1,0 +1,21 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+
+declare const __BUILD_COMMIT__: string;
+declare const __BUILD_DATE__: string;
+---
+
+<Default {...Astro.props}>
+  <slot />
+</Default>
+<p class="version-footnote" title={__BUILD_DATE__}>v{__BUILD_COMMIT__}</p>
+
+<style>
+  .version-footnote {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+    margin: 0.5rem 0;
+  }
+</style>
