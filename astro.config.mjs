@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi';
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,6 +10,16 @@ export default defineConfig({
 
   integrations: [
     starlight({
+      plugins: [
+        starlightOpenAPI([
+          {
+            base: 'api-reference',
+            label: 'OpenAPI Reference',
+            schema: './public/openapi.yaml',
+            collapsed: false,
+          },
+        ]),
+      ],
       title: 'SolidRusT AI',
       description: 'API documentation for SolidRusT AI inference platform',
       logo: {
@@ -67,13 +78,15 @@ export default defineConfig({
             { label: 'Code Generation', slug: 'examples/code-generation' },
           ],
         },
+        ...openAPISidebarGroups,
       ],
       head: [
         {
           tag: 'link',
           attrs: {
             rel: 'icon',
-            href: '/favicon.ico',
+            type: 'image/svg+xml',
+            href: '/favicon.svg',
           },
         },
       ],

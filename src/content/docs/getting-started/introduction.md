@@ -19,7 +19,7 @@ SolidRusT AI provides a unified API for accessing large language models (LLMs) a
 All API requests should be made to:
 
 ```
-https://artemis.hq.solidrust.net/v1
+https://api.solidrust.ai/v1
 ```
 
 ## Available Models

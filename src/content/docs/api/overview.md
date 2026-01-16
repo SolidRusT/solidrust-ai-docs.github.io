@@ -8,7 +8,7 @@ The SolidRusT AI API provides OpenAI-compatible endpoints for AI inference.
 ## Base URL
 
 ```
-https://artemis.hq.solidrust.net/v1
+https://api.solidrust.ai/v1
 ```
 
 ## Available Endpoints
@@ -31,7 +31,7 @@ All requests must include:
 ### Example Request
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/chat/completions \
+curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{

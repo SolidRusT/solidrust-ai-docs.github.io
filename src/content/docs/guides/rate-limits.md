@@ -67,7 +67,7 @@ from openai import OpenAI, RateLimitError
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 def make_request_with_retry(messages, max_retries=5):

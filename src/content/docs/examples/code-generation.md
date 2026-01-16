@@ -12,7 +12,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 def generate_code(description: str, language: str = "python") -> str:

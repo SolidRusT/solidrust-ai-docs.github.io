@@ -27,7 +27,7 @@ Authorization: Bearer YOUR_API_KEY
 ### Example
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/chat/completions \
+curl https://api.solidrust.ai/v1/chat/completions \
   -H "Authorization: Bearer sk_live_abc123..." \
   -H "Content-Type: application/json" \
   -d '{"model": "qwen3-4b", "messages": [{"role": "user", "content": "Hi"}]}'
@@ -51,7 +51,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ.get("SOLIDRUST_API_KEY"),
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 ```
 
@@ -59,7 +59,7 @@ client = OpenAI(
 ```javascript
 const client = new OpenAI({
   apiKey: process.env.SOLIDRUST_API_KEY,
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 ```
 

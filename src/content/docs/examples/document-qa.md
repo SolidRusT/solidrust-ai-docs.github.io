@@ -32,7 +32,7 @@ from chromadb.utils import embedding_functions
 # Initialize clients
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 # Custom embedding function using SolidRusT AI

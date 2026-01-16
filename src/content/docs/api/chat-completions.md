@@ -33,7 +33,7 @@ POST /v1/chat/completions
 ## Example Request
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/chat/completions \
+curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -78,7 +78,7 @@ curl https://artemis.hq.solidrust.net/v1/chat/completions \
 Set `stream: true` to receive responses as server-sent events (SSE).
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/chat/completions \
+curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{

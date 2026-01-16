@@ -22,7 +22,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 # Chat completion
@@ -45,7 +45,7 @@ import asyncio
 
 client = AsyncOpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 async def main():
@@ -109,7 +109,7 @@ import os
 
 client = OpenAI(
     api_key=os.environ.get("SOLIDRUST_API_KEY"),
-    base_url=os.environ.get("SOLIDRUST_BASE_URL", "https://artemis.hq.solidrust.net/v1")
+    base_url=os.environ.get("SOLIDRUST_BASE_URL", "https://api.solidrust.ai/v1")
 )
 ```
 

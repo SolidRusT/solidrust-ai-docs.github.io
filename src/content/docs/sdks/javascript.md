@@ -26,7 +26,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'YOUR_API_KEY',
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 
 const response = await client.chat.completions.create({
@@ -134,6 +134,6 @@ const response = await fetch('/api/chat', {
 ```typescript
 const client = new OpenAI({
   apiKey: process.env.SOLIDRUST_API_KEY,
-  baseURL: process.env.SOLIDRUST_BASE_URL || 'https://artemis.hq.solidrust.net/v1',
+  baseURL: process.env.SOLIDRUST_BASE_URL || 'https://api.solidrust.ai/v1',
 });
 ```

@@ -24,7 +24,7 @@ POST /v1/embeddings
 ### Single Input
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/embeddings \
+curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -36,7 +36,7 @@ curl https://artemis.hq.solidrust.net/v1/embeddings \
 ### Batch Input
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/embeddings \
+curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{

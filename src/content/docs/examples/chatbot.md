@@ -12,7 +12,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 class ChatBot:
@@ -63,7 +63,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 class StreamingChatBot:
@@ -112,7 +112,7 @@ import * as readline from 'readline';
 
 const client = new OpenAI({
   apiKey: 'YOUR_API_KEY',
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 
 class ChatBot {

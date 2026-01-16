@@ -85,7 +85,7 @@ from openai import OpenAI, APIError, RateLimitError
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 try:
@@ -106,7 +106,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'YOUR_API_KEY',
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 
 try {

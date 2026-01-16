@@ -38,7 +38,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 stream = client.chat.completions.create(
@@ -63,7 +63,7 @@ import asyncio
 
 client = AsyncOpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 async def stream_response():
@@ -88,7 +88,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'YOUR_API_KEY',
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 
 const stream = await client.chat.completions.create({
@@ -108,7 +108,7 @@ for await (const chunk of stream) {
 ## Web Browser (fetch)
 
 ```javascript
-const response = await fetch('https://artemis.hq.solidrust.net/v1/chat/completions', {
+const response = await fetch('https://api.solidrust.ai/v1/chat/completions', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

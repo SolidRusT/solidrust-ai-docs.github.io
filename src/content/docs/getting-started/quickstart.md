@@ -15,7 +15,7 @@ Get up and running with the SolidRusT AI API in under 5 minutes.
 ### Using curl
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/chat/completions \
+curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -33,7 +33,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_API_KEY",
-    base_url="https://artemis.hq.solidrust.net/v1"
+    base_url="https://api.solidrust.ai/v1"
 )
 
 response = client.chat.completions.create(
@@ -53,7 +53,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: 'YOUR_API_KEY',
-  baseURL: 'https://artemis.hq.solidrust.net/v1',
+  baseURL: 'https://api.solidrust.ai/v1',
 });
 
 const response = await client.chat.completions.create({

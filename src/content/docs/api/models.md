@@ -14,7 +14,7 @@ GET /v1/models
 ### Example Request
 
 ```bash
-curl https://artemis.hq.solidrust.net/v1/models \
+curl https://api.solidrust.ai/v1/models \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

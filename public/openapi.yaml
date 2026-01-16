@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: SolidRusT AI API
   description: |
-    OpenAI-compatible API for AI inference.
+    OpenAI-compatible API for AI inference with RAG (Retrieval-Augmented Generation) capabilities.
 
     ## Authentication
     All endpoints require an API key passed via the `Authorization` header:
@@ -10,10 +10,17 @@ info:
     Authorization: Bearer YOUR_API_KEY
     ```
 
+    Get your API key at [console.solidrust.ai](https://console.solidrust.ai).
+
     ## Base URL
     ```
-    https://artemis.hq.solidrust.net/v1
+    https://api.solidrust.ai
     ```
+
+    ## Endpoints Overview
+    - **Inference** (`/v1/*`): OpenAI-compatible chat and embeddings
+    - **RAG** (`/data/v1/*`): Semantic search, knowledge graph, and hybrid queries
+    - **Agent** (`/v1/agent/*`): Tool-enabled AI assistant with RAG capabilities
   version: 1.0.0
   contact:
     name: SolidRusT Networks
@@ -23,17 +30,17 @@ info:
     url: https://solidrust.ai/terms
 
 servers:
-  - url: https://artemis.hq.solidrust.net/v1
+  - url: https://api.solidrust.ai
     description: Production server
 
 security:
   - BearerAuth: []
 
 paths:
-  /chat/completions:
+  /v1/chat/completions:
     post:
       summary: Create chat completion
-      description: Creates a model response for the given chat conversation.
+      description: Creates a model response for the given chat conversation. OpenAI-compatible endpoint.
       operationId: createChatCompletion
       tags:
         - Chat
@@ -57,10 +64,10 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 
-  /embeddings:
+  /v1/embeddings:
     post:
       summary: Create embeddings
-      description: Creates an embedding vector representing the input text.
+      description: Creates an embedding vector representing the input text using the bge-m3 model.
       operationId: createEmbedding
       tags:
         - Embeddings
@@ -82,7 +89,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /models:
+  /v1/models:
     get:
       summary: List models
       description: Lists the currently available models.
@@ -99,6 +106,159 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  /data/v1/query/semantic:
+    post:
+      summary: Semantic search
+      description: |
+        Performs semantic similarity search across the knowledge base using vector embeddings.
+        Returns documents ranked by semantic similarity to the query.
+      operationId: semanticSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemanticQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticQueryResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /data/v1/query/keyword:
+    post:
+      summary: Keyword search
+      description: |
+        Performs full-text keyword search with typo tolerance.
+        Supports filtering by source, content type, and sorting.
+      operationId: keywordSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeywordQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeywordQueryResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /data/v1/query/hybrid:
+    post:
+      summary: Hybrid search
+      description: |
+        Combines semantic similarity search with knowledge graph relationships.
+        Allows configurable weighting between semantic and graph results.
+      operationId: hybridSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HybridQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticQueryResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /data/v1/query/knowledge-graph:
+    post:
+      summary: Knowledge graph query
+      description: |
+        Queries the knowledge graph for entities and relationships.
+        Supports traversal with configurable depth and relationship filtering.
+      operationId: knowledgeGraphQuery
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQueryResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/agent/chat:
+    post:
+      summary: Agent chat with tools
+      description: |
+        Chat with an AI agent that has access to RAG tools for searching the knowledge base.
+        The agent can automatically use semantic search, knowledge graph queries, and hybrid search
+        to answer questions with grounded information.
+      operationId: agentChat
+      tags:
+        - Agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentChatRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentChatResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/agent/tools:
+    get:
+      summary: List available agent tools
+      description: Returns the list of tools available to the AI agent.
+      operationId: listAgentTools
+      tags:
+        - Agent
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -107,6 +267,7 @@ components:
       description: API key authentication
 
   schemas:
+    # Inference Schemas
     ChatCompletionRequest:
       type: object
       required:
@@ -116,7 +277,7 @@ components:
         model:
           type: string
           description: ID of the model to use
-          example: qwen3-4b
+          example: vllm-primary
         messages:
           type: array
           description: A list of messages comprising the conversation
@@ -233,6 +394,7 @@ components:
                 type: array
                 items:
                   type: number
+                description: The embedding vector (1024 dimensions for bge-m3)
         model:
           type: string
         usage:
@@ -269,6 +431,289 @@ components:
         total_tokens:
           type: integer
 
+    # RAG Schemas
+    SemanticQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query text
+          example: "How do I implement RAG?"
+        sources:
+          type: array
+          items:
+            type: string
+          description: Filter results to specific sources
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+          description: Maximum number of results to return
+        min_score:
+          type: number
+          default: 0.5
+          minimum: 0
+          maximum: 1
+          description: Minimum similarity score threshold
+        filters:
+          type: object
+          description: Additional metadata filters
+
+    SemanticQueryResult:
+      type: object
+      properties:
+        query:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        total:
+          type: integer
+        latency_ms:
+          type: number
+
+    SearchResult:
+      type: object
+      properties:
+        document_id:
+          type: string
+        content:
+          type: string
+        score:
+          type: number
+          description: Similarity score (0-1)
+        metadata:
+          type: object
+          properties:
+            source:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+            content_type:
+              type: string
+
+    KeywordQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The keyword search query
+        limit:
+          type: integer
+          default: 10
+        offset:
+          type: integer
+          default: 0
+        sources:
+          type: array
+          items:
+            type: string
+        content_type:
+          type: string
+        sort:
+          type: string
+          enum: [relevance, date]
+
+    KeywordQueryResult:
+      type: object
+      properties:
+        query:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        total:
+          type: integer
+        latency_ms:
+          type: number
+
+    HybridQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query text
+        semantic_weight:
+          type: number
+          default: 0.7
+          minimum: 0
+          maximum: 1
+          description: Weight for semantic search results
+        graph_weight:
+          type: number
+          default: 0.3
+          minimum: 0
+          maximum: 1
+          description: Weight for knowledge graph results
+        sources:
+          type: array
+          items:
+            type: string
+        entity_boost:
+          type: array
+          items:
+            type: string
+          description: Entity names to boost in results
+        limit:
+          type: integer
+          default: 10
+
+    GraphQuery:
+      type: object
+      required:
+        - entity
+      properties:
+        entity:
+          type: string
+          description: The entity name to query
+          example: "Python"
+        relationship_types:
+          type: array
+          items:
+            type: string
+          description: Filter to specific relationship types
+        direction:
+          type: string
+          enum: [outgoing, incoming, both]
+          default: both
+        depth:
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 5
+          description: Graph traversal depth
+        limit:
+          type: integer
+          default: 50
+
+    GraphQueryResult:
+      type: object
+      properties:
+        entity:
+          type: string
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
+        latency_ms:
+          type: number
+
+    Entity:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        properties:
+          type: object
+
+    Relationship:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          type: string
+        properties:
+          type: object
+
+    # Agent Schemas
+    AgentChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: The user message
+        system_prompt:
+          type: string
+          description: Optional system prompt to guide the agent
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          description: Previous conversation history
+        temperature:
+          type: number
+          default: 0.7
+          minimum: 0
+          maximum: 2
+        max_tokens:
+          type: integer
+          default: 1024
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+
+    AgentChatResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        response:
+          type: string
+          description: The agent's response
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolCall'
+          description: Tools used by the agent to generate the response
+        error:
+          type: string
+
+    ToolCall:
+      type: object
+      properties:
+        tool:
+          type: string
+        arguments:
+          type: object
+        result:
+          type: object
+
+    ToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              parameters:
+                type: object
+        count:
+          type: integer
+
+    # Error Schema
     Error:
       type: object
       properties:
@@ -308,8 +753,15 @@ components:
 
 tags:
   - name: Chat
-    description: Chat completion endpoints
+    description: OpenAI-compatible chat completion endpoint
   - name: Embeddings
-    description: Embedding generation endpoints
+    description: Vector embedding generation
   - name: Models
-    description: Model information endpoints
+    description: Available model information
+  - name: RAG
+    description: |
+      Retrieval-Augmented Generation endpoints for searching the knowledge base.
+      Includes semantic search, keyword search, hybrid search, and knowledge graph queries.
+  - name: Agent
+    description: |
+      AI agent with built-in RAG tools for answering questions with grounded information.
