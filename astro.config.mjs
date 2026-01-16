@@ -90,6 +90,8 @@ export default defineConfig({
           label: 'Examples',
           items: [
             { label: 'Chat Bot', slug: 'examples/chatbot' },
+            { label: 'Agent Chat', slug: 'examples/agent-chat' },
+            { label: 'Semantic Search', slug: 'examples/semantic-search' },
             { label: 'Document Q&A', slug: 'examples/document-qa' },
             { label: 'Code Generation', slug: 'examples/code-generation' },
           ],
