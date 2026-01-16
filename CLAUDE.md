@@ -86,14 +86,22 @@ description: Description for SEO and link previews
 
 The OpenAPI spec at `/public/openapi.yaml` is the source of truth for API documentation.
 
-### OpenAPI Integration (Future)
+### OpenAPI Integration (Enabled)
 
-The `starlight-openapi` package is installed for dynamic API docs rendering. To enable:
+The `starlight-openapi` plugin is configured in `astro.config.mjs` and generates interactive API documentation at `/api-reference/`.
 
-1. Update `astro.config.mjs` to import the OpenAPI schema
-2. Add OpenAPI-generated pages to the sidebar
+**Endpoints documented**:
+- `/v1/chat/completions` - Chat completion (OpenAI-compatible)
+- `/v1/embeddings` - Vector embeddings (bge-m3)
+- `/v1/models` - List available models
+- `/data/v1/query/semantic` - Semantic search (RAG)
+- `/data/v1/query/keyword` - Keyword search (RAG)
+- `/data/v1/query/hybrid` - Hybrid search (RAG)
+- `/data/v1/query/knowledge-graph` - Knowledge graph query (RAG)
+- `/v1/agent/chat` - Tool-enabled agent chat
+- `/v1/agent/tools` - List agent tools
 
-**Current state**: OpenAPI spec exists as a downloadable file. Interactive docs are a future enhancement.
+**Base URL**: `https://api.solidrust.ai`
 
 ---
 
@@ -155,10 +163,10 @@ Each endpoint page should include:
 
 ## Backlog
 
-### High Priority
-- [ ] Enable interactive OpenAPI/Swagger UI
-- [ ] Add search functionality verification
-- [ ] Create proper favicon
+### High Priority (Completed)
+- [x] Enable interactive OpenAPI/Swagger UI (starlight-openapi)
+- [x] Add search functionality verification (Pagefind working)
+- [x] Create proper favicon (SVG favicon created)
 
 ### Medium Priority
 - [ ] Add versioning support for API changes
@@ -215,4 +223,4 @@ Standard documentation site permissions:
 
 ---
 
-**Version**: 1.1 | **Updated**: January 16, 2026
+**Version**: 1.2 | **Updated**: January 16, 2026
