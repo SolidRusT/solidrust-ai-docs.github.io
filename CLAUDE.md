@@ -161,22 +161,16 @@ Each endpoint page should include:
 
 ---
 
-## Backlog
+## Issue Tracking
 
-### High Priority (Completed)
-- [x] Enable interactive OpenAPI/Swagger UI (starlight-openapi)
-- [x] Add search functionality verification (Pagefind working)
-- [x] Create proper favicon (SVG favicon created)
+**Platform**: GitHub
+**Issues**: https://github.com/SolidRusT/solidrust-ai-docs.github.io/issues
 
-### Medium Priority
-- [ ] Add versioning support for API changes
-- [ ] Create changelog page
-- [ ] Add analytics (privacy-respecting)
+Backlog, bugs, and enhancements are tracked as git issues.
+This CLAUDE.md contains domain knowledge and patterns, not task tracking.
 
-### Low Priority
-- [ ] Multi-language documentation (i18n)
-- [ ] Video tutorials embedded in guides
-- [ ] Community contributions guide
+**To check current work**: Review open issues
+**To add new work**: Create an issue with acceptance criteria
 
 ---
 
