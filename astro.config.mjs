@@ -57,6 +57,7 @@ export default defineConfig({
           items: [
             { label: 'Introduction', slug: 'getting-started/introduction' },
             { label: 'Quick Start', slug: 'getting-started/quickstart' },
+            { label: 'API Keys', slug: 'getting-started/api-keys' },
             { label: 'Authentication', slug: 'getting-started/authentication' },
           ],
         },
