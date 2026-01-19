@@ -85,6 +85,7 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
+            { label: 'Video Tutorials', slug: 'guides/video-tutorials' },
             { label: 'RAG Applications', slug: 'guides/rag' },
             { label: 'Streaming Responses', slug: 'guides/streaming' },
             { label: 'Rate Limits', slug: 'guides/rate-limits' },
