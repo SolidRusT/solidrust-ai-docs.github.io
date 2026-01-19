@@ -98,6 +98,7 @@ export default defineConfig({
             { label: 'Code Generation', slug: 'examples/code-generation' },
           ],
         },
+        { label: 'Changelog', slug: 'changelog' },
         ...openAPISidebarGroups,
       ],
       head: [
