@@ -1,0 +1,142 @@
+---
+/**
+ * Privacy-respecting analytics component using Plausible Analytics
+ * 
+ * Features:
+ * - No cookies, GDPR compliant
+ * - Page view tracking
+ * - Search term analytics
+ * - Outbound link tracking
+ * - Custom event tracking for documentation interactions
+ * 
+ * @see https://plausible.io/docs
+ */
+
+interface Props {
+  domain?: string;
+  enableDev?: boolean;
+}
+
+const { 
+  domain = 'docs.solidrust.ai',
+  enableDev = false 
+} = Astro.props;
+
+const isProd = import.meta.env.PROD;
+const shouldLoad = isProd || enableDev;
+---
+
+{shouldLoad && (
+  <>
+    <!-- Plausible Analytics - Privacy-focused, no cookies -->
+    <script 
+      defer 
+      data-domain={domain}
+      src="https://plausible.io/js/script.outbound-links.js"
+      is:inline
+    />
+
+    <!-- Documentation-specific event tracking -->
+    <script is:inline>
+      // Track search interactions in Starlight's search
+      document.addEventListener('DOMContentLoaded', function() {
+        // Track when search modal is opened
+        const searchButton = document.querySelector('[data-open-modal]');
+        if (searchButton) {
+          searchButton.addEventListener('click', function() {
+            if (window.plausible) {
+              window.plausible('Search Opened');
+            }
+          });
+        }
+
+        // Track search queries (debounced)
+        let searchTimeout;
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+              const searchInput = document.querySelector('[data-pagefind-ui] input');
+              if (searchInput && !searchInput.dataset.tracked) {
+                searchInput.dataset.tracked = 'true';
+                searchInput.addEventListener('input', function(e) {
+                  clearTimeout(searchTimeout);
+                  searchTimeout = setTimeout(function() {
+                    const query = e.target.value.trim();
+                    if (query.length >= 3 && window.plausible) {
+                      window.plausible('Search Query', { props: { query: query } });
+                    }
+                  }, 1000); // Debounce 1 second
+                });
+              }
+            }
+          });
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Track copy button clicks (code examples)
+        document.querySelectorAll('button[data-copy]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            if (window.plausible) {
+              const codeBlock = btn.closest('.expressive-code');
+              const lang = codeBlock?.querySelector('pre')?.dataset.language || 'unknown';
+              window.plausible('Code Copied', { props: { language: lang } });
+            }
+          });
+        });
+
+        // Track sidebar navigation depth
+        document.querySelectorAll('nav[aria-label="Main"] a').forEach(function(link) {
+          link.addEventListener('click', function() {
+            if (window.plausible) {
+              const section = link.closest('[data-sidebar-section]')?.dataset.sidebarSection || 'root';
+              window.plausible('Navigation Click', { props: { section: section } });
+            }
+          });
+        });
+
+        // Track external link clicks (SDK downloads, GitHub, etc.)
+        document.querySelectorAll('a[href^="http"]').forEach(function(link) {
+          if (!link.hostname.includes('solidrust.ai')) {
+            link.addEventListener('click', function() {
+              if (window.plausible) {
+                window.plausible('External Link', { props: { url: link.href } });
+              }
+            });
+          }
+        });
+
+        // Track scroll depth on documentation pages
+        let maxScroll = 0;
+        const trackScroll = function() {
+          const scrollPercent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+          if (scrollPercent > maxScroll) {
+            maxScroll = scrollPercent;
+            // Track at 25%, 50%, 75%, 100% milestones
+            [25, 50, 75, 100].forEach(function(milestone) {
+              if (maxScroll >= milestone && !window['scrollTracked' + milestone]) {
+                window['scrollTracked' + milestone] = true;
+                if (window.plausible) {
+                  window.plausible('Scroll Depth', { props: { depth: milestone + '%' } });
+                }
+              }
+            });
+          }
+        };
+        
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(trackScroll, 100);
+        }, { passive: true });
+      });
+    </script>
+  </>
+)}
+
+<!-- Development mode indicator -->
+{!shouldLoad && (
+  <script is:inline>
+    console.log('[Analytics] Disabled in development mode. Set enableDev=true to test.');
+  </script>
+)}
