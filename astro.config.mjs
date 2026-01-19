@@ -87,6 +87,7 @@ export default defineConfig({
             { label: 'RAG Applications', slug: 'guides/rag' },
             { label: 'Streaming Responses', slug: 'guides/streaming' },
             { label: 'Rate Limits', slug: 'guides/rate-limits' },
+            { label: 'Documentation Style', slug: 'guides/documentation-style' },
           ],
         },
         {
