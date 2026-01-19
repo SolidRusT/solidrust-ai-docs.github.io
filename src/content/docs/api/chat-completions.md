@@ -15,7 +15,7 @@ POST /v1/chat/completions
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `model` | string | Yes | Model ID to use (e.g., `qwen3-4b`) |
+| `model` | string | Yes | Model ID to use (e.g., `vllm-primary`) |
 | `messages` | array | Yes | Array of message objects |
 | `temperature` | number | No | Sampling temperature (0-2). Default: 1 |
 | `max_tokens` | integer | No | Maximum tokens to generate |
@@ -37,7 +37,7 @@ curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "qwen3-4b",
+    "model": "vllm-primary",
     "messages": [
       {"role": "system", "content": "You are a helpful assistant."},
       {"role": "user", "content": "What is machine learning?"}
@@ -54,7 +54,7 @@ curl https://api.solidrust.ai/v1/chat/completions \
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1704067200,
-  "model": "qwen3-4b",
+  "model": "vllm-primary",
   "choices": [
     {
       "index": 0,
@@ -82,7 +82,7 @@ curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "qwen3-4b",
+    "model": "vllm-primary",
     "messages": [{"role": "user", "content": "Hello!"}],
     "stream": true
   }'
