@@ -26,6 +26,27 @@
 }
 
 /* ==========================================================================
+   Header Logo Sizing - Constrain oversized logo
+   ========================================================================== */
+
+/* Constrain logo size in header to match text height */
+header .site-title img,
+header [data-logo] img,
+.sl-site-title img {
+  max-height: 1.75rem !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Ensure logo container doesn't expand beyond needed */
+header .site-title,
+.sl-site-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
    Site Title Styling - Match marketing site "SolidRusT.ai" look
    ========================================================================== */
 
