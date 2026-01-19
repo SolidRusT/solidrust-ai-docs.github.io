@@ -1,0 +1,15 @@
+---
+/**
+ * Custom Head component for Starlight
+ * Extends the default head with analytics
+ */
+import type { Props } from '@astrojs/starlight/props';
+import StarlightHead from '@astrojs/starlight/components/Head.astro';
+import Analytics from './Analytics.astro';
+---
+
+<!-- Default Starlight head content -->
+<StarlightHead {...Astro.props}><slot /></StarlightHead>
+
+<!-- Privacy-respecting analytics -->
+<Analytics domain="docs.solidrust.ai" />
