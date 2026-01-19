@@ -71,6 +71,7 @@ export default defineConfig({
             { label: 'Embeddings', slug: 'api/embeddings' },
             { label: 'Models', slug: 'api/models' },
             { label: 'Error Handling', slug: 'api/errors' },
+            { label: 'Versioning', slug: 'api/versioning' },
           ],
         },
         {
