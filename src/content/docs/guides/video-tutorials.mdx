@@ -1,0 +1,92 @@
+---
+title: Video Tutorials
+description: Video walkthroughs for common SolidRusT AI use cases
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+# Video Tutorials
+
+Learn how to integrate SolidRusT AI into your applications with our video tutorials. Each video includes a full transcript for accessibility.
+
+:::note[Coming Soon]
+Video tutorials are currently in development. Subscribe to our [changelog](/changelog) for updates.
+:::
+
+## Planned Tutorials
+
+<CardGrid>
+  <Card title="Getting Started" icon="rocket">
+    A complete walkthrough of creating your first API request, from signing up to making your first chat completion.
+    
+    **Duration:** ~10 minutes  
+    **Topics:** Account setup, API keys, first request
+  </Card>
+  
+  <Card title="Authentication Deep Dive" icon="lock">
+    Understanding API key management, security best practices, and authentication patterns.
+    
+    **Duration:** ~8 minutes  
+    **Topics:** API key rotation, secure storage, header authentication
+  </Card>
+  
+  <Card title="Building a Chatbot" icon="comment">
+    Step-by-step tutorial for building a conversational AI chatbot using the Chat Completions API.
+    
+    **Duration:** ~15 minutes  
+    **Topics:** Conversation history, streaming, context management
+  </Card>
+  
+  <Card title="RAG Application" icon="document">
+    Create a document Q&A system using embeddings and semantic search.
+    
+    **Duration:** ~20 minutes  
+    **Topics:** Embeddings, vector search, knowledge retrieval
+  </Card>
+</CardGrid>
+
+## Using the VideoEmbed Component
+
+Once tutorials are published, they'll be embedded like this:
+
+```mdx
+import VideoEmbed from '../../../components/VideoEmbed.astro';
+
+<VideoEmbed
+  title="Getting Started with SolidRusT AI"
+  youtubeId="VIDEO_ID_HERE"
+/>
+```
+
+### With Transcript
+
+```mdx
+<VideoEmbed
+  title="Authentication Tutorial"
+  youtubeId="VIDEO_ID_HERE"
+  transcriptFile="auth-tutorial-transcript.md"
+>
+  <Fragment slot="transcript">
+    Welcome to the SolidRusT AI authentication tutorial.
+    In this video, we'll cover how to securely manage your API keys...
+  </Fragment>
+</VideoEmbed>
+```
+
+## Video Hosting
+
+Our tutorials are hosted on YouTube with privacy-enhanced mode enabled. This means:
+- No tracking cookies until you play the video
+- Videos can still be played embedded
+- Full caption and transcript support
+
+## Transcript Accessibility
+
+All video tutorials include:
+- Auto-generated captions on YouTube
+- Full written transcripts in the documentation
+- Downloadable transcript files
+
+:::tip[Request a Tutorial]
+Have a specific use case you'd like to see covered? Open an issue on our [GitHub repository](https://github.com/SolidRusT/solidrust-ai-docs.github.io/issues).
+:::

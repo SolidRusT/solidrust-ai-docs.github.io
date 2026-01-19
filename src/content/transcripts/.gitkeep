@@ -1,0 +1,10 @@
+# Video Transcripts
+
+This directory contains transcript files for video tutorials.
+
+Naming convention: `{video-slug}-transcript.md`
+
+Example:
+- getting-started-transcript.md
+- authentication-transcript.md
+- chatbot-tutorial-transcript.md
