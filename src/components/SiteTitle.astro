@@ -1,16 +1,26 @@
 ---
 /**
  * Custom SiteTitle component to match solidrust.ai marketing site branding
- * Renders "SolidRusT.ai" with green accent on ".ai"
+ * Renders "SolidRusT.ai" with green accent on ".ai" and version badge
  */
 import type { Props } from '@astrojs/starlight/props';
+import VersionBadge from './VersionBadge.astro';
 ---
 
-<a href="/" class="site-title sl-flex">
-  <span class="brand-text">SolidRusT<span class="brand-accent">.ai</span></span>
-</a>
+<div class="site-title-wrapper sl-flex">
+  <a href="/" class="site-title sl-flex">
+    <span class="brand-text">SolidRusT<span class="brand-accent">.ai</span></span>
+  </a>
+  <VersionBadge />
+</div>
 
 <style>
+  .site-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
   .site-title {
     text-decoration: none;
     gap: 0.5rem;

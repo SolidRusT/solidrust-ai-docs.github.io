@@ -1,0 +1,126 @@
+---
+title: API Versioning
+description: Understanding SolidRusT AI API versioning and migration strategies
+---
+
+import { Badge, Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+# API Versioning
+
+The SolidRusT AI API uses semantic versioning to ensure stability while enabling continued development.
+
+## Current Version
+
+<Card title="API v1" icon="rocket">
+  **Status:** <Badge text="Current" variant="success" />
+  
+  **Released:** January 16, 2026
+  
+  **Base URL:** `https://api.solidrust.ai/v1`
+</Card>
+
+## Version Format
+
+Our API versions follow the format `v{major}` in the URL path:
+
+```
+https://api.solidrust.ai/v1/chat/completions
+                          ^^
+                          Version prefix
+```
+
+### Version Lifecycle
+
+| Stage | Description | Support |
+|-------|-------------|----------|
+| <Badge text="Current" variant="success" /> | Active development, latest features | Full support |
+| <Badge text="Stable" variant="note" /> | Feature-complete, maintenance only | Full support |
+| <Badge text="Deprecated" variant="caution" /> | Scheduled for removal | 6 months minimum |
+| <Badge text="Sunset" variant="danger" /> | Read-only, no new features | Limited support |
+
+## Breaking Changes Policy
+
+We consider the following to be **breaking changes** that warrant a new major version:
+
+- Removing endpoints or parameters
+- Changing response structure
+- Modifying authentication requirements
+- Altering error code meanings
+
+**Non-breaking changes** (applied to current version):
+
+- Adding new endpoints
+- Adding optional parameters
+- Adding new fields to responses
+- Performance improvements
+
+## Migration Strategy
+
+When a new API version is released:
+
+1. **Announcement**: Published in [Changelog](/changelog) at least 30 days before release
+2. **Overlap Period**: Both versions run in parallel for minimum 6 months
+3. **Migration Guide**: Detailed guide with code examples provided
+4. **Deprecation Warnings**: Old version returns `X-API-Deprecated` header
+5. **Sunset**: Old version returns `410 Gone` after sunset date
+
+<Aside type="tip">
+  Subscribe to our changelog to receive notifications about upcoming API changes.
+</Aside>
+
+## Version History
+
+### v1 (Current) - January 2026
+
+Initial public release including:
+
+- Chat Completions API (OpenAI-compatible)
+- Embeddings API with bge-m3 model
+- RAG endpoints (semantic, keyword, hybrid search)
+- Agent API with tool support
+
+See the [full changelog](/changelog#2026-01-16---public-launch) for details.
+
+## Specifying API Version
+
+### Via URL Path (Recommended)
+
+```bash
+curl https://api.solidrust.ai/v1/chat/completions \
+  -H "X-API-Key: your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "vllm-primary", "messages": [...]}'
+```
+
+### Via Header (Future Support)
+
+In future versions, you may also specify the API version via header:
+
+```bash
+curl https://api.solidrust.ai/chat/completions \
+  -H "X-API-Version: 2026-01-16" \
+  -H "X-API-Key: your-api-key"
+```
+
+<Aside type="note">
+  Header-based versioning is planned for v2. Currently, use the URL path method.
+</Aside>
+
+## SDK Version Compatibility
+
+Our SDKs are versioned independently but maintain compatibility:
+
+| SDK | Version | API Compatibility |
+|-----|---------|-------------------|
+| Python | 1.x | v1 |
+| JavaScript | 1.x | v1 |
+
+SDKs automatically use the correct API version. Update your SDK to access new features.
+
+## Questions?
+
+If you have questions about API versioning or need migration assistance:
+
+- Check the [Changelog](/changelog) for recent changes
+- Review our [Getting Started](/getting-started/introduction) guide
+- [Open an issue](https://github.com/SolidRusT/solidrust-ai-docs.github.io/issues/new) on GitHub
