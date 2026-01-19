@@ -1,0 +1,324 @@
+---
+title: Documentation Style Guide
+description: Guidelines for writing clear, consistent, and helpful documentation for SolidRusT AI.
+---
+
+import { Card, CardGrid, Tabs, TabItem } from '@astrojs/starlight/components';
+
+This guide helps contributors write documentation that is clear, consistent, and helpful for developers using SolidRusT AI.
+
+## Writing Principles
+
+<CardGrid>
+  <Card title="Be Concise" icon="rocket">
+    Developers want quick answers. Get to the point.
+  </Card>
+  <Card title="Be Accurate" icon="approve-check">
+    Test all code examples. Verify API details.
+  </Card>
+  <Card title="Be Inclusive" icon="heart">
+    Avoid jargon. Define technical terms.
+  </Card>
+  <Card title="Be Practical" icon="puzzle">
+    Include working examples for every feature.
+  </Card>
+</CardGrid>
+
+## Voice and Tone
+
+### Use Second Person
+
+Address the reader directly with "you" and "your":
+
+| Do | Don't |
+|---|---|
+| "You can configure the client..." | "Users can configure the client..." |
+| "Your API key is..." | "The user's API key is..." |
+
+### Use Active Voice
+
+| Do | Don't |
+|---|---|
+| "The API returns a response" | "A response is returned by the API" |
+| "Configure your environment" | "Your environment should be configured" |
+
+### Be Direct
+
+| Do | Don't |
+|---|---|
+| "Run this command" | "You might want to consider running" |
+| "This feature requires..." | "It should be noted that this feature..." |
+
+## Code Examples
+
+### Always Include Complete Examples
+
+Every code example should be:
+- **Runnable** - Copy-paste should work
+- **Complete** - Include all imports and setup
+- **Realistic** - Use practical use cases
+
+<Tabs>
+  <TabItem label="Good">
+    ```python
+    from openai import OpenAI
+
+    # Initialize client with SolidRusT AI endpoint
+    client = OpenAI(
+        base_url="https://api.solidrust.ai/v1",
+        api_key="YOUR_API_KEY"  # Replace with your key
+    )
+
+    # Make a chat completion request
+    response = client.chat.completions.create(
+        model="vllm-primary",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello!"}
+        ]
+    )
+
+    # Print the response
+    print(response.choices[0].message.content)
+    ```
+  </TabItem>
+  <TabItem label="Bad">
+    ```python
+    # Don't do this - incomplete and unclear
+    response = client.chat.completions.create(
+        model="...",
+        messages=[...]
+    )
+    ```
+  </TabItem>
+</Tabs>
+
+### Multi-Language Examples
+
+For API endpoints, provide examples in multiple languages:
+
+<Tabs>
+  <TabItem label="cURL">
+    ```bash
+    curl https://api.solidrust.ai/v1/chat/completions \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model": "vllm-primary",
+        "messages": [{"role": "user", "content": "Hello!"}]
+      }'
+    ```
+  </TabItem>
+  <TabItem label="Python">
+    ```python
+    from openai import OpenAI
+
+    client = OpenAI(
+        base_url="https://api.solidrust.ai/v1",
+        api_key="YOUR_API_KEY"
+    )
+
+    response = client.chat.completions.create(
+        model="vllm-primary",
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```javascript
+    import OpenAI from 'openai';
+
+    const client = new OpenAI({
+      baseURL: 'https://api.solidrust.ai/v1',
+      apiKey: 'YOUR_API_KEY',
+    });
+
+    const response = await client.chat.completions.create({
+      model: 'vllm-primary',
+      messages: [{ role: 'user', content: 'Hello!' }],
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+## Page Structure
+
+### Standard Documentation Page
+
+```mdx
+---
+title: Clear, Descriptive Title
+description: One sentence explaining what this page covers.
+---
+
+Introductory paragraph explaining the topic and why it matters.
+
+## Prerequisites
+
+List what the reader needs before starting.
+
+## Main Content
+
+Step-by-step instructions or explanations.
+
+### Subsection
+
+Break complex topics into digestible sections.
+
+## Examples
+
+Working code examples demonstrating the concept.
+
+## Next Steps
+
+Link to related documentation.
+```
+
+### API Reference Page
+
+```mdx
+---
+title: Endpoint Name
+description: Brief description of what this endpoint does.
+---
+
+## Endpoint
+
+`POST /v1/endpoint`
+
+## Request
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| Authorization | Yes | Bearer token |
+| Content-Type | Yes | application/json |
+
+### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| param1 | string | Yes | Description |
+| param2 | number | No | Description (default: 10) |
+
+### Example Request
+
+[Code examples here]
+
+## Response
+
+### Success Response (200)
+
+[Example response JSON]
+
+### Error Responses
+
+[Error codes and descriptions]
+```
+
+## Callouts
+
+Use callouts to highlight important information:
+
+:::note
+Use **notes** for neutral information the reader should be aware of.
+:::
+
+:::tip
+Use **tips** for helpful suggestions, best practices, or shortcuts.
+:::
+
+:::caution
+Use **caution** for potential issues or things to watch out for.
+:::
+
+:::danger
+Use **danger** for critical warnings about security, data loss, or breaking changes.
+:::
+
+## Formatting
+
+### Headings
+
+- Use sentence case for headings
+- Don't skip heading levels (h2 -> h4)
+- Keep headings concise
+
+### Lists
+
+- Use bullet points for unordered items
+- Use numbered lists for sequential steps
+- Keep list items parallel in structure
+
+### Tables
+
+Use tables for structured data like parameters or comparison:
+
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Data | Data | Data |
+
+### Links
+
+- Use descriptive link text
+- Link to related documentation
+- Avoid "click here" or bare URLs
+
+| Do | Don't |
+|---|---|
+| See the [authentication guide](/getting-started/authentication) | [Click here](/getting-started/authentication) |
+| Learn about [rate limits](/guides/rate-limits) | https://docs.solidrust.ai/guides/rate-limits |
+
+## Starlight Components
+
+### Cards
+
+```mdx
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Title" icon="rocket">
+    Card content
+  </Card>
+</CardGrid>
+```
+
+### Tabs
+
+```mdx
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Tab 1">Content 1</TabItem>
+  <TabItem label="Tab 2">Content 2</TabItem>
+</Tabs>
+```
+
+### Steps
+
+```mdx
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+1. First step
+2. Second step
+3. Third step
+</Steps>
+```
+
+## Review Checklist
+
+Before submitting documentation:
+
+- [ ] All code examples are tested and working
+- [ ] API details match actual behavior
+- [ ] No placeholder text or TODOs
+- [ ] Links work correctly
+- [ ] Follows this style guide
+- [ ] Builds without errors (`npm run build`)
+- [ ] Grammar and spelling checked
+
+---
+
+Have questions about the style guide? [Open a discussion](https://github.com/SolidRusT/solidrust-ai-docs.github.io/discussions).
