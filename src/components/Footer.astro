@@ -4,18 +4,72 @@ import Default from '@astrojs/starlight/components/Footer.astro';
 
 declare const __BUILD_COMMIT__: string;
 declare const __BUILD_DATE__: string;
+
+const currentYear = new Date().getFullYear();
 ---
 
 <Default {...Astro.props}>
   <slot />
 </Default>
-<p class="version-footnote" title={__BUILD_DATE__}>v{__BUILD_COMMIT__}</p>
+
+<div class="company-footer">
+  <p class="company-info">
+    &copy; {currentYear} <a href="https://solidrust.net" target="_blank" rel="noopener">SolidRusT Networks</a>. All rights reserved.
+  </p>
+  <div class="footer-links">
+    <a href="https://solidrust.ai" target="_blank" rel="noopener">AI Platform</a>
+    <span class="separator">|</span>
+    <a href="https://solidrust.net" target="_blank" rel="noopener">Community Hub</a>
+  </div>
+  <p class="version-footnote" title={__BUILD_DATE__}>v{__BUILD_COMMIT__}</p>
+</div>
 
 <style>
-  .version-footnote {
+  .company-footer {
     text-align: center;
-    font-size: 0.75rem;
+    padding: 1.5rem 1rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+    margin-top: 2rem;
+  }
+  
+  .company-info {
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-2);
+    margin-bottom: 0.5rem;
+  }
+  
+  .company-info a {
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+  }
+  
+  .company-info a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-links {
+    font-size: 0.875rem;
     color: var(--sl-color-gray-3);
     margin: 0.5rem 0;
+  }
+  
+  .footer-links a {
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    color: var(--sl-color-text-accent);
+  }
+  
+  .separator {
+    margin: 0 0.5rem;
+    color: var(--sl-color-gray-4);
+  }
+  
+  .version-footnote {
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+    margin-top: 0.5rem;
   }
 </style>
