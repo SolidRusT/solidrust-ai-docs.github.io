@@ -1,0 +1,87 @@
+---
+title: Changelog
+description: API changes, new features, and deprecations for SolidRusT AI
+---
+
+import { Badge } from '@astrojs/starlight/components';
+
+# Changelog
+
+All notable changes to the SolidRusT AI API are documented here.
+
+This changelog follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and the API adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [Unreleased]
+
+Features and changes in development, not yet deployed to production.
+
+---
+
+## [2026-01-19] - API Gateway Updates
+
+### Added
+- <Badge text="New" variant="success" /> Privacy-focused analytics on documentation site
+- <Badge text="New" variant="success" /> Comprehensive SEO metadata for all public sites
+- <Badge text="New" variant="success" /> Sitemap generation for improved search indexing
+
+### Changed
+- Improved API documentation with interactive OpenAPI explorer
+
+---
+
+## [2026-01-16] - Public Launch
+
+### Added
+- <Badge text="New" variant="success" /> **API Gateway** at `api.solidrust.ai` - Public endpoint for all API calls
+- <Badge text="New" variant="success" /> **Documentation Site** at `docs.solidrust.ai` - Comprehensive API documentation
+- <Badge text="New" variant="success" /> **PAM Platform** - API key management and billing via `console.solidrust.ai`
+
+### API Endpoints
+- `/v1/chat/completions` - OpenAI-compatible chat completions
+- `/v1/embeddings` - Vector embeddings using bge-m3 model
+- `/v1/models` - List available models
+- `/data/v1/query/semantic` - Semantic search (RAG)
+- `/data/v1/query/keyword` - Keyword search (RAG)
+- `/data/v1/query/hybrid` - Hybrid search (RAG)
+- `/v1/agent/chat` - Tool-enabled agent conversations
+
+---
+
+## [2025-12-01] - Infrastructure Foundation
+
+### Added
+- Initial vLLM inference deployment with Qwen3-4B model
+- LiteLLM proxy for OpenAI compatibility
+- Embeddings service with bge-m3 model
+
+### Infrastructure
+- Kubernetes cluster with 12 nodes (including 5 GPU nodes)
+- Automatic failover to Claude Haiku when vLLM is unavailable
+
+---
+
+## Legend
+
+| Badge | Meaning |
+|-------|---------|
+| <Badge text="New" variant="success" /> | New feature or endpoint |
+| <Badge text="Changed" variant="note" /> | Changes to existing functionality |
+| <Badge text="Deprecated" variant="caution" /> | Feature scheduled for removal |
+| <Badge text="Removed" variant="danger" /> | Removed feature |
+| <Badge text="Fixed" variant="tip" /> | Bug fix |
+| <Badge text="Security" variant="danger" /> | Security-related change |
+
+---
+
+## Subscribing to Updates
+
+- **GitHub**: Watch the [solidrust-ai-docs.github.io](https://github.com/SolidRusT/solidrust-ai-docs.github.io) repository
+- **RSS**: Coming soon - RSS feed for changelog updates
+
+---
+
+## Reporting Issues
+
+Found a bug or have a feature request? [Open an issue](https://github.com/SolidRusT/solidrust-ai-docs.github.io/issues/new) on GitHub.
