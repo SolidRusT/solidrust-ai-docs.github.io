@@ -1,0 +1,343 @@
+---
+/**
+ * Video Embed Component
+ * 
+ * Embeds YouTube or custom videos with accessibility features.
+ * Supports captions, transcripts, and responsive sizing.
+ * 
+ * Usage in MDX:
+ * ```mdx
+ * import VideoEmbed from '../../../components/VideoEmbed.astro';
+ * 
+ * <VideoEmbed
+ *   title="Getting Started with SolidRusT AI"
+ *   youtubeId="dQw4w9WgXcQ"
+ *   transcriptFile="getting-started-transcript.md"
+ * />
+ * ```
+ * 
+ * Or with a direct URL:
+ * ```mdx
+ * <VideoEmbed
+ *   title="Authentication Tutorial"
+ *   src="https://videos.solidrust.ai/auth-tutorial.mp4"
+ *   poster="/assets/video-posters/auth-tutorial.jpg"
+ *   transcriptFile="auth-transcript.md"
+ * />
+ * ```
+ */
+
+export interface Props {
+  /** Video title for accessibility and SEO */
+  title: string;
+  /** YouTube video ID (preferred for hosted videos) */
+  youtubeId?: string;
+  /** Direct video URL (for self-hosted videos) */
+  src?: string;
+  /** Poster image for self-hosted videos */
+  poster?: string;
+  /** Path to transcript markdown file (relative to content/transcripts) */
+  transcriptFile?: string;
+  /** Optional aspect ratio (default: 16/9) */
+  aspectRatio?: string;
+  /** Optional start time in seconds (YouTube only) */
+  start?: number;
+}
+
+const { 
+  title, 
+  youtubeId, 
+  src, 
+  poster,
+  transcriptFile, 
+  aspectRatio = '16 / 9',
+  start = 0
+} = Astro.props;
+
+// Validate that either youtubeId or src is provided
+if (!youtubeId && !src) {
+  throw new Error('VideoEmbed requires either youtubeId or src prop');
+}
+
+// Build YouTube embed URL with privacy-enhanced mode
+const youtubeEmbedUrl = youtubeId 
+  ? `https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&modestbranding=1${start ? `&start=${start}` : ''}` 
+  : null;
+
+// Generate unique ID for accessibility
+const videoId = `video-${youtubeId || src?.split('/').pop()?.split('.')[0] || 'custom'}`;
+const transcriptId = `${videoId}-transcript`;
+---
+
+<div class="video-embed-container" style={`--aspect-ratio: ${aspectRatio}`}>
+  <figure class="video-figure">
+    {youtubeEmbedUrl ? (
+      <!-- YouTube embed with privacy-enhanced mode -->
+      <div class="video-wrapper youtube-wrapper">
+        <iframe
+          id={videoId}
+          src={youtubeEmbedUrl}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+          aria-describedby={transcriptFile ? transcriptId : undefined}
+        />
+      </div>
+    ) : (
+      <!-- Self-hosted video -->
+      <div class="video-wrapper native-wrapper">
+        <video
+          id={videoId}
+          controls
+          preload="metadata"
+          poster={poster}
+          aria-describedby={transcriptFile ? transcriptId : undefined}
+        >
+          <source src={src} type="video/mp4" />
+          <track kind="captions" src={src?.replace('.mp4', '.vtt')} srclang="en" label="English" default />
+          <p>
+            Your browser doesn't support HTML5 video. 
+            <a href={src}>Download the video</a> instead.
+          </p>
+        </video>
+      </div>
+    )}
+    
+    <figcaption class="video-caption">
+      <span class="video-title">{title}</span>
+      {transcriptFile && (
+        <button
+          class="transcript-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls={transcriptId}
+          data-transcript-file={transcriptFile}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          View Transcript
+        </button>
+      )}
+    </figcaption>
+  </figure>
+  
+  {transcriptFile && (
+    <div id={transcriptId} class="transcript-container" hidden>
+      <div class="transcript-header">
+        <h4 class="transcript-title">Transcript</h4>
+        <button class="transcript-close" type="button" aria-label="Close transcript">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="transcript-content">
+        <slot name="transcript" />
+        <!-- Transcript content can be passed as a slot or loaded dynamically -->
+        <p class="transcript-placeholder">Transcript loading...</p>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .video-embed-container {
+    margin: 1.5rem 0;
+  }
+
+  .video-figure {
+    margin: 0;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--aspect-ratio, 16 / 9);
+    background-color: var(--sl-color-gray-6);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .video-wrapper iframe,
+  .video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-wrapper video {
+    object-fit: contain;
+    background: #000;
+  }
+
+  .video-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    padding: 0 0.25rem;
+  }
+
+  .video-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+  }
+
+  .transcript-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.375rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .transcript-toggle:hover {
+    background: var(--sl-color-gray-5);
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent);
+  }
+
+  .transcript-toggle:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+
+  .transcript-toggle[aria-expanded="true"] {
+    background: var(--sl-color-accent-low);
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent);
+  }
+
+  .transcript-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+  }
+
+  .transcript-container[hidden] {
+    display: none;
+  }
+
+  .transcript-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+
+  .transcript-title {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+  }
+
+  .transcript-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .transcript-close:hover {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+
+  .transcript-content {
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+  }
+
+  .transcript-content :global(p) {
+    margin-bottom: 0.75rem;
+  }
+
+  .transcript-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .transcript-placeholder {
+    color: var(--sl-color-gray-4);
+    font-style: italic;
+  }
+
+  /* Focus ring for accessibility */
+  .video-wrapper:focus-within {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .video-caption {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Transcript toggle functionality
+  document.querySelectorAll('.transcript-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      const transcriptId = button.getAttribute('aria-controls');
+      const transcript = document.getElementById(transcriptId!);
+      
+      if (transcript) {
+        button.setAttribute('aria-expanded', String(!expanded));
+        button.textContent = expanded ? 'View Transcript' : 'Hide Transcript';
+        transcript.hidden = expanded;
+      }
+    });
+  });
+
+  // Transcript close button functionality
+  document.querySelectorAll('.transcript-close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', () => {
+      const container = closeBtn.closest('.transcript-container');
+      if (container) {
+        container.hidden = true;
+        const toggleBtn = document.querySelector(`[aria-controls="${container.id}"]`);
+        if (toggleBtn) {
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          toggleBtn.textContent = 'View Transcript';
+        }
+      }
+    });
+  });
+</script>
