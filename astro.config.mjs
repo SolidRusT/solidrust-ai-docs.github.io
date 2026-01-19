@@ -25,6 +25,7 @@ export default defineConfig({
     starlight({
       components: {
         Footer: './src/components/Footer.astro',
+        SiteTitle: './src/components/SiteTitle.astro',
       },
       plugins: [
         starlightOpenAPI([
@@ -120,6 +121,9 @@ export default defineConfig({
     define: {
       __BUILD_COMMIT__: JSON.stringify(gitInfo.commitHash),
       __BUILD_DATE__: JSON.stringify(gitInfo.commitDate),
+    },
+    server: {
+      allowedHosts: ['probook', 'localhost'],
     },
   },
 });

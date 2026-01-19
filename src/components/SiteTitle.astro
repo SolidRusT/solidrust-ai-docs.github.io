@@ -1,0 +1,40 @@
+---
+/**
+ * Custom SiteTitle component to match solidrust.ai marketing site branding
+ * Renders "SolidRusT.ai" with green accent on ".ai"
+ */
+import type { Props } from '@astrojs/starlight/props';
+---
+
+<a href="/" class="site-title sl-flex">
+  <span class="brand-text">SolidRusT<span class="brand-accent">.ai</span></span>
+</a>
+
+<style>
+  .site-title {
+    text-decoration: none;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .brand-text {
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--sl-color-text);
+  }
+
+  .brand-accent {
+    color: #22c55e;
+  }
+
+  /* Ensure proper contrast in both modes */
+  :global([data-theme='dark']) .brand-text {
+    color: #fafafa;
+  }
+
+  :global([data-theme='light']) .brand-text,
+  :global(:root:not([data-theme='dark'])) .brand-text {
+    color: #18181b;
+  }
+</style>
