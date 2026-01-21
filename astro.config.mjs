@@ -53,6 +53,14 @@ export default defineConfig({
       customCss: [
         './src/styles/custom.css',
       ],
+      // i18n configuration - ready for translations
+      // To enable: uncomment locales and defaultLocale, move English content to src/content/docs/en/
+      // locales: {
+      //   en: { label: 'English', lang: 'en' },
+      //   es: { label: 'Espanol', lang: 'es' },
+      //   'zh-cn': { label: '简体中文', lang: 'zh-CN' },
+      // },
+      // defaultLocale: 'en',
       sidebar: [
         {
           label: 'Getting Started',
@@ -90,6 +98,7 @@ export default defineConfig({
             { label: 'Streaming Responses', slug: 'guides/streaming' },
             { label: 'Rate Limits', slug: 'guides/rate-limits' },
             { label: 'Documentation Style', slug: 'guides/documentation-style' },
+            { label: 'Translation Guide', slug: 'guides/translation-guide' },
           ],
         },
         {
