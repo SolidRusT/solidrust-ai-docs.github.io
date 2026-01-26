@@ -30,7 +30,7 @@ Authorization: Bearer YOUR_API_KEY
 curl https://api.solidrust.ai/v1/chat/completions \
   -H "Authorization: Bearer sk_live_abc123..." \
   -H "Content-Type: application/json" \
-  -d '{"model": "qwen3-4b", "messages": [{"role": "user", "content": "Hi"}]}'
+  -d '{"model": "vllm-primary", "messages": [{"role": "user", "content": "Hi"}]}'
 ```
 
 ## API Key Security

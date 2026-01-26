@@ -11,7 +11,7 @@ Set `stream: true` in your request:
 
 ```json
 {
-  "model": "qwen3-4b",
+  "model": "vllm-primary",
   "messages": [{"role": "user", "content": "Tell me a story"}],
   "stream": true
 }
@@ -22,11 +22,11 @@ Set `stream: true` in your request:
 Streaming responses use Server-Sent Events (SSE):
 
 ```
-data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"qwen3-4b","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"vllm-primary","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"qwen3-4b","choices":[{"index":0,"delta":{"content":"Once"},"finish_reason":null}]}
+data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"vllm-primary","choices":[{"index":0,"delta":{"content":"Once"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"qwen3-4b","choices":[{"index":0,"delta":{"content":" upon"},"finish_reason":null}]}
+data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1234567890,"model":"vllm-primary","choices":[{"index":0,"delta":{"content":" upon"},"finish_reason":null}]}
 
 data: [DONE]
 ```
@@ -42,7 +42,7 @@ client = OpenAI(
 )
 
 stream = client.chat.completions.create(
-    model="qwen3-4b",
+    model="vllm-primary",
     messages=[{"role": "user", "content": "Tell me a story"}],
     stream=True
 )
@@ -68,7 +68,7 @@ client = AsyncOpenAI(
 
 async def stream_response():
     stream = await client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[{"role": "user", "content": "Tell me a story"}],
         stream=True
     )
@@ -92,7 +92,7 @@ const client = new OpenAI({
 });
 
 const stream = await client.chat.completions.create({
-  model: 'qwen3-4b',
+  model: 'vllm-primary',
   messages: [{ role: 'user', content: 'Tell me a story' }],
   stream: true,
 });
@@ -115,7 +115,7 @@ const response = await fetch('https://api.solidrust.ai/v1/chat/completions', {
     'Authorization': 'Bearer YOUR_API_KEY',
   },
   body: JSON.stringify({
-    model: 'qwen3-4b',
+    model: 'vllm-primary',
     messages: [{ role: 'user', content: 'Tell me a story' }],
     stream: true,
   }),

@@ -27,7 +27,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="qwen3-4b",
+    model="vllm-primary",
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
@@ -43,7 +43,7 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: 'qwen3-4b',
+  model: 'vllm-primary',
   messages: [{ role: 'user', content: 'Hello!' }],
 });
 ```

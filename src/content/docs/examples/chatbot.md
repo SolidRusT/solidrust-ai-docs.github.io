@@ -31,7 +31,7 @@ class ChatBot:
         })
 
         response = client.chat.completions.create(
-            model="qwen3-4b",
+            model="vllm-primary",
             messages=self.messages,
             temperature=0.7
         )
@@ -76,7 +76,7 @@ class StreamingChatBot:
         self.messages.append({"role": "user", "content": user_message})
 
         stream = client.chat.completions.create(
-            model="qwen3-4b",
+            model="vllm-primary",
             messages=self.messages,
             stream=True
         )
@@ -127,7 +127,7 @@ class ChatBot {
     this.messages.push({ role: 'user', content: userMessage });
 
     const response = await client.chat.completions.create({
-      model: 'qwen3-4b',
+      model: 'vllm-primary',
       messages: this.messages,
     });
 

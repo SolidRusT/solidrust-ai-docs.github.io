@@ -17,7 +17,7 @@ client = OpenAI(
 
 def generate_code(description: str, language: str = "python") -> str:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",
@@ -45,7 +45,7 @@ print(code)
 ```python
 def explain_code(code: str) -> str:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",
@@ -78,7 +78,7 @@ print(explain_code(code_to_explain))
 ```python
 def review_code(code: str, focus: str = "general") -> str:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",
@@ -116,7 +116,7 @@ print(review_code(code, focus="security"))
 ```python
 def convert_code(code: str, from_lang: str, to_lang: str) -> str:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",
@@ -149,7 +149,7 @@ print(js_code)
 ```python
 def generate_tests(code: str, framework: str = "pytest") -> str:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",

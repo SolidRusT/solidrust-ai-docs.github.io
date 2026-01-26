@@ -35,7 +35,7 @@ curl https://api.solidrust.ai/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "qwen3-4b",
+    "model": "vllm-primary",
     "messages": [
       {"role": "user", "content": "Hello!"}
     ]

@@ -78,7 +78,7 @@ def answer_question(question: str, n_results: int = 3) -> str:
 
     # Generate answer
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[
             {
                 "role": "system",

@@ -25,12 +25,12 @@ curl https://api.solidrust.ai/v1/models \
   "object": "list",
   "data": [
     {
-      "id": "qwen3-4b",
+      "id": "vllm-primary",
       "object": "model",
       "created": 1704067200,
       "owned_by": "solidrust",
       "permission": [],
-      "root": "qwen3-4b",
+      "root": "vllm-primary",
       "parent": null
     },
     {
@@ -50,9 +50,14 @@ curl https://api.solidrust.ai/v1/models \
 
 ### Chat Models
 
-| Model ID | Parameters | Context Length | Best For |
-|----------|------------|----------------|----------|
-| `qwen3-4b` | 4B | 8192 | General chat, coding, reasoning |
+| Model ID | Description | Context Length | Best For |
+|----------|-------------|----------------|----------|
+| `vllm-primary` | Recommended alias (currently Qwen3-4B) | 8192 | All chat tasks - use this |
+| `qwen3-4b` | Direct model reference | 8192 | When you need a specific model |
+
+:::tip[Use vllm-primary]
+Always use `vllm-primary` in your code. This alias automatically routes to our best available model and ensures your integration survives model upgrades without code changes.
+:::
 
 ### Embedding Models
 
@@ -62,17 +67,15 @@ curl https://api.solidrust.ai/v1/models \
 
 ## Model Selection
 
-:::tip[Choosing a Model]
-- For general chat and completion tasks, use `qwen3-4b`
-- For creating embeddings, use `bge-m3`
-:::
+- **Chat completions**: Use `vllm-primary`
+- **Embeddings**: Use `bge-m3`
 
 ## Failover Behavior
 
-When local GPU infrastructure is unavailable, requests automatically route to:
+When local GPU infrastructure is unavailable, requests automatically route to cloud providers:
 
-| Primary | Failover |
-|---------|----------|
-| `qwen3-4b` | Claude Haiku |
+| Primary | Failover Chain |
+|---------|----------------|
+| `vllm-primary` | OpenAI GPT-4o-mini → Claude Haiku |
 
-This ensures high availability while maintaining API compatibility.
+This ensures high availability while maintaining API compatibility. You can detect failover by checking the `model` field in responses - it will indicate which model actually served the request.

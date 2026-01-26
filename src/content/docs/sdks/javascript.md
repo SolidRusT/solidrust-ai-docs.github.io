@@ -30,7 +30,7 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: 'qwen3-4b',
+  model: 'vllm-primary',
   messages: [
     { role: 'system', content: 'You are a helpful assistant.' },
     { role: 'user', content: 'What is JavaScript?' }
@@ -44,7 +44,7 @@ console.log(response.choices[0].message.content);
 
 ```typescript
 const stream = await client.chat.completions.create({
-  model: 'qwen3-4b',
+  model: 'vllm-primary',
   messages: [{ role: 'user', content: 'Tell me a story' }],
   stream: true,
 });
@@ -73,7 +73,7 @@ import OpenAI from 'openai';
 
 try {
   const response = await client.chat.completions.create({
-    model: 'qwen3-4b',
+    model: 'vllm-primary',
     messages: [{ role: 'user', content: 'Hello' }],
   });
 } catch (error) {
@@ -100,7 +100,7 @@ const messages: ChatCompletionMessageParam[] = [
 ];
 
 const response: ChatCompletion = await client.chat.completions.create({
-  model: 'qwen3-4b',
+  model: 'vllm-primary',
   messages,
 });
 ```
@@ -115,7 +115,7 @@ Use a backend proxy:
 // Backend (Node.js)
 app.post('/api/chat', async (req, res) => {
   const response = await client.chat.completions.create({
-    model: 'qwen3-4b',
+    model: 'vllm-primary',
     messages: req.body.messages,
   });
   res.json(response);

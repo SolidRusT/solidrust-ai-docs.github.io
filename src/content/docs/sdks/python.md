@@ -27,7 +27,7 @@ client = OpenAI(
 
 # Chat completion
 response = client.chat.completions.create(
-    model="qwen3-4b",
+    model="vllm-primary",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "What is Python?"}
@@ -50,7 +50,7 @@ client = AsyncOpenAI(
 
 async def main():
     response = await client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[{"role": "user", "content": "Hello!"}]
     )
     print(response.choices[0].message.content)
@@ -62,7 +62,7 @@ asyncio.run(main())
 
 ```python
 stream = client.chat.completions.create(
-    model="qwen3-4b",
+    model="vllm-primary",
     messages=[{"role": "user", "content": "Tell me a story"}],
     stream=True
 )
@@ -91,7 +91,7 @@ from openai import OpenAI, APIError, RateLimitError, AuthenticationError
 
 try:
     response = client.chat.completions.create(
-        model="qwen3-4b",
+        model="vllm-primary",
         messages=[{"role": "user", "content": "Hello"}]
     )
 except AuthenticationError:

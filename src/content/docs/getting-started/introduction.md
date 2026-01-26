@@ -26,7 +26,7 @@ https://api.solidrust.ai/v1
 
 | Model | Type | Use Case |
 |-------|------|----------|
-| `qwen3-4b` | Chat | General-purpose chat and completion |
+| `vllm-primary` | Chat | General-purpose chat and completion (recommended) |
 | `bge-m3` | Embeddings | Semantic search, RAG applications |
 
 ## Next Steps
