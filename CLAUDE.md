@@ -13,7 +13,7 @@
 | **Site URL** | https://docs.solidrust.ai |
 | **GitHub Pages** | Deployed via GitHub Actions |
 | **Related Sites** | solidrust.ai (marketing), console.solidrust.ai (dashboard) |
-| **API Base URL** | https://artemis.hq.solidrust.net/v1 |
+| **API Base URL** | https://api.solidrust.ai/v1 |
 
 ---
 
@@ -217,4 +217,4 @@ Standard documentation site permissions:
 
 ---
 
-**Version**: 1.2 | **Updated**: January 16, 2026
+**Version**: 1.3 | **Updated**: January 28, 2026
