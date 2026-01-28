@@ -18,13 +18,28 @@ Your API key is shown only once. Store it securely - you'll need to generate a n
 
 ## Using Your API Key
 
-Include your API key in the `Authorization` header of every request:
+Include your API key in request headers. Two formats are supported:
+
+### X-API-Key Header (Recommended)
+
+```http
+X-API-Key: YOUR_API_KEY
+```
+
+```bash
+curl https://api.solidrust.ai/v1/chat/completions \
+  -H "X-API-Key: sk_live_abc123..." \
+  -H "Content-Type: application/json" \
+  -d '{"model": "vllm-primary", "messages": [{"role": "user", "content": "Hi"}]}'
+```
+
+### Authorization Bearer (OpenAI SDK Compatible)
+
+For compatibility with OpenAI SDKs:
 
 ```http
 Authorization: Bearer YOUR_API_KEY
 ```
-
-### Example
 
 ```bash
 curl https://api.solidrust.ai/v1/chat/completions \

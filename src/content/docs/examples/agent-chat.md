@@ -18,14 +18,18 @@ The agent endpoint differs from standard chat completions:
 
 ## Basic Agent Chat
 
+The agent accepts messages in OpenAI-compatible format:
+
 ### curl
 
 ```bash
 curl -X POST "https://api.solidrust.ai/v1/agent/chat" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "message": "What programming languages does the platform support?",
+    "messages": [
+      {"role": "user", "content": "What programming languages does the platform support?"}
+    ],
     "temperature": 0.7,
     "max_tokens": 1024
   }'
@@ -39,21 +43,18 @@ import requests
 API_KEY = "YOUR_API_KEY"
 BASE_URL = "https://api.solidrust.ai"
 
-def agent_chat(message: str, history: list = None) -> dict:
-    """Send a message to the agent and get a grounded response."""
+def agent_chat(messages: list) -> dict:
+    """Send messages to the agent and get a grounded response."""
     payload = {
-        "message": message,
+        "messages": messages,
         "temperature": 0.7,
         "max_tokens": 1024
     }
 
-    if history:
-        payload["history"] = history
-
     response = requests.post(
         f"{BASE_URL}/v1/agent/chat",
         headers={
-            "Authorization": f"Bearer {API_KEY}",
+            "X-API-Key": API_KEY,
             "Content-Type": "application/json"
         },
         json=payload
@@ -62,7 +63,9 @@ def agent_chat(message: str, history: list = None) -> dict:
     return response.json()
 
 # Simple query
-result = agent_chat("What are the system requirements for the API?")
+result = agent_chat([
+    {"role": "user", "content": "What are the system requirements for the API?"}
+])
 
 if result.get("success"):
     print("Response:", result["response"])
@@ -71,7 +74,7 @@ if result.get("success"):
     if result.get("tool_calls"):
         print("\nTools used:")
         for call in result["tool_calls"]:
-            print(f"  - {call['tool']}: {call.get('arguments', {})}")
+            print(f"  - {call['name']}: {call.get('arguments', {})}")
 else:
     print("Error:", result.get("error"))
 ```
@@ -82,21 +85,17 @@ else:
 const API_KEY = 'YOUR_API_KEY';
 const BASE_URL = 'https://api.solidrust.ai';
 
-async function agentChat(message, history = null) {
+async function agentChat(messages) {
   const payload = {
-    message,
+    messages,
     temperature: 0.7,
     max_tokens: 1024,
   };
 
-  if (history) {
-    payload.history = history;
-  }
-
   const response = await fetch(`${BASE_URL}/v1/agent/chat`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${API_KEY}`,
+      'X-API-Key': API_KEY,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),
@@ -106,7 +105,9 @@ async function agentChat(message, history = null) {
 }
 
 // Usage
-const result = await agentChat('How do I authenticate API requests?');
+const result = await agentChat([
+  { role: 'user', content: 'How do I authenticate API requests?' }
+]);
 
 if (result.success) {
   console.log('Response:', result.response);
@@ -114,7 +115,7 @@ if (result.success) {
   if (result.tool_calls) {
     console.log('\nTools used:');
     result.tool_calls.forEach((call) => {
-      console.log(`  - ${call.tool}:`, call.arguments);
+      console.log(`  - ${call.name}:`, call.arguments);
     });
   }
 } else {
@@ -124,7 +125,7 @@ if (result.success) {
 
 ## Conversation History
 
-Maintain context across multiple exchanges:
+Maintain context across multiple exchanges using the `messages` array:
 
 ```python
 import requests
@@ -134,41 +135,41 @@ BASE_URL = "https://api.solidrust.ai"
 
 class AgentConversation:
     def __init__(self, system_prompt: str = None):
-        self.history = []
-        self.system_prompt = system_prompt
+        self.messages = []
+        if system_prompt:
+            self.messages.append({"role": "system", "content": system_prompt})
 
     def chat(self, message: str) -> str:
-        payload = {
-            "message": message,
-            "temperature": 0.7,
-            "max_tokens": 1024,
-            "history": self.history
-        }
-
-        if self.system_prompt:
-            payload["system_prompt"] = self.system_prompt
+        # Add user message
+        self.messages.append({"role": "user", "content": message})
 
         response = requests.post(
             f"{BASE_URL}/v1/agent/chat",
             headers={
-                "Authorization": f"Bearer {API_KEY}",
+                "X-API-Key": API_KEY,
                 "Content-Type": "application/json"
             },
-            json=payload
+            json={
+                "messages": self.messages,
+                "temperature": 0.7,
+                "max_tokens": 1024
+            }
         )
 
         result = response.json()
 
         if result.get("success"):
-            # Add to history for context continuity
-            self.history.append({"role": "user", "content": message})
-            self.history.append({"role": "assistant", "content": result["response"]})
+            # Add assistant response to history
+            self.messages.append({"role": "assistant", "content": result["response"]})
             return result["response"]
         else:
+            # Remove failed user message
+            self.messages.pop()
             raise Exception(result.get("error", "Unknown error"))
 
     def clear_history(self):
-        self.history = []
+        # Keep system prompt if present
+        self.messages = [m for m in self.messages if m["role"] == "system"]
 
 # Multi-turn conversation
 agent = AgentConversation(
@@ -187,7 +188,7 @@ print(agent.chat("How can I request a higher limit?"))
 
 ## Custom System Prompts
 
-Guide the agent's behavior and focus:
+Guide the agent's behavior using the system role in messages:
 
 ```python
 # Research assistant focused on technical topics
@@ -215,13 +216,28 @@ When helping users:
 response = support_agent.chat("I'm getting authentication errors")
 ```
 
+Alternatively, include the system prompt directly in the request:
+
+```python
+response = requests.post(
+    f"{BASE_URL}/v1/agent/chat",
+    headers={"X-API-Key": API_KEY, "Content-Type": "application/json"},
+    json={
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "What is RAG?"}
+        ]
+    }
+)
+```
+
 ## List Available Tools
 
 Check what tools the agent has access to:
 
 ```bash
 curl -X GET "https://api.solidrust.ai/v1/agent/tools" \
-  -H "Authorization: Bearer YOUR_API_KEY"
+  -H "X-API-Key: YOUR_API_KEY"
 ```
 
 ```python
@@ -229,7 +245,7 @@ import requests
 
 response = requests.get(
     "https://api.solidrust.ai/v1/agent/tools",
-    headers={"Authorization": f"Bearer {API_KEY}"}
+    headers={"X-API-Key": API_KEY}
 )
 
 tools = response.json()
@@ -272,6 +288,114 @@ Example response:
     }
   ],
   "count": 3
+}
+```
+
+## Custom Tools (Pass-Through)
+
+Inject your own tools alongside or instead of the built-in RAG tools. Custom tools are **pass-through** - when the agent calls them, you receive the tool call details in the response for client-side execution.
+
+### Adding Custom Tools
+
+```python
+import requests
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://api.solidrust.ai"
+
+# Define custom tools in OpenAI format
+custom_tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get current weather for a location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "City name, e.g. 'San Francisco'"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "send_email",
+            "description": "Send an email to a recipient",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "to": {"type": "string", "description": "Recipient email"},
+                    "subject": {"type": "string", "description": "Email subject"},
+                    "body": {"type": "string", "description": "Email body"}
+                },
+                "required": ["to", "subject", "body"]
+            }
+        }
+    }
+]
+
+response = requests.post(
+    f"{BASE_URL}/v1/agent/chat",
+    headers={"X-API-Key": API_KEY, "Content-Type": "application/json"},
+    json={
+        "messages": [{"role": "user", "content": "What's the weather in Tokyo?"}],
+        "tools": custom_tools,
+        "include_builtin_tools": True  # Also include RAG tools (default)
+    }
+)
+
+result = response.json()
+
+# Handle pass-through tool calls
+for call in result.get("tool_calls", []):
+    if call.get("is_passthrough"):
+        # Execute this tool yourself
+        print(f"Execute {call['name']} with args: {call['arguments']}")
+        # Your implementation here...
+    else:
+        # Built-in tool was executed server-side
+        print(f"Server executed {call['name']}: {call['result']}")
+```
+
+### Custom Tools Only (No RAG)
+
+Use only your custom tools without the built-in RAG tools:
+
+```python
+response = requests.post(
+    f"{BASE_URL}/v1/agent/chat",
+    headers={"X-API-Key": API_KEY, "Content-Type": "application/json"},
+    json={
+        "messages": [{"role": "user", "content": "Send an email to bob@example.com"}],
+        "tools": custom_tools,
+        "include_builtin_tools": False  # Only use custom tools
+    }
+)
+```
+
+### Tool Call Response Format
+
+Custom tool calls include `is_passthrough: true`:
+
+```json
+{
+  "success": true,
+  "response": "I'll check the weather in Tokyo for you.",
+  "tool_calls": [
+    {
+      "id": "call_abc123",
+      "name": "get_weather",
+      "arguments": {"location": "Tokyo"},
+      "result": null,
+      "is_passthrough": true
+    }
+  ]
 }
 ```
 
@@ -322,16 +446,16 @@ Example tool call in response:
 ```python
 import requests
 
-def safe_agent_chat(message: str) -> str:
+def safe_agent_chat(messages: list) -> str:
     """Agent chat with proper error handling."""
     try:
         response = requests.post(
             f"{BASE_URL}/v1/agent/chat",
             headers={
-                "Authorization": f"Bearer {API_KEY}",
+                "X-API-Key": API_KEY,
                 "Content-Type": "application/json"
             },
-            json={"message": message},
+            json={"messages": messages},
             timeout=30  # Agent calls may take longer due to tool use
         )
 
