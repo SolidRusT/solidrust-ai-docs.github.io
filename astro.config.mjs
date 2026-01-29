@@ -86,6 +86,7 @@ export default defineConfig({
           label: 'SDKs',
           items: [
             { label: 'Overview', slug: 'sdks/overview' },
+            { label: 'Usage Guide', slug: 'sdks/usage' },
             { label: 'Python', slug: 'sdks/python' },
             { label: 'JavaScript/TypeScript', slug: 'sdks/javascript' },
           ],
