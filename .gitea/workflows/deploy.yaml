@@ -1,0 +1,49 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Astro site
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GH_DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Push source to GitHub main
+        run: |
+          git remote add github git@github.com:SolidRusT/solidrust-ai-docs.github.io.git || git remote set-url github git@github.com:SolidRusT/solidrust-ai-docs.github.io.git
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" git push github HEAD:main --force
+
+      - name: Deploy to gh-pages branch
+        run: |
+          cd dist
+          git init
+          git config user.name "Gitea CI"
+          git config user.email "ci@solidrust.net"
+          git add -A
+          git commit -m "Deploy $(date -u +%Y%m%d%H%M%S) from $(git -C .. rev-parse --short HEAD)"
+          git remote add github git@github.com:SolidRusT/solidrust-ai-docs.github.io.git
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" git push github HEAD:gh-pages --force
