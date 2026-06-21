@@ -19,14 +19,43 @@ Features and changes in development, not yet deployed to production.
 
 ---
 
+## [2026-06-20] - Full API Documentation Alignment
+
+### Added
+
+- <Badge text="New" variant="success" /> **Graph Traversal endpoints** documented: `/data/v1/query/graph`, `/graph/search`, `/graph/entity/{name}`, `/graph/documents`
+- <Badge text="New" variant="success" /> **Document Ingestion** endpoints documented with idempotency notes
+- <Badge text="New" variant="success" /> **API Reference pages** for Semantic Search, Keyword Search, Hybrid Search, Knowledge Graph, Graph Traversal, Ingestion, Agent Chat, and Agent Tools
+- <Badge text="New" variant="success" /> **Management endpoints** documented: `/data/v1/sources`, `/data/v1/stats`
+- <Badge text="New" variant="success" /> **Agent memory tools** documented: MemorySearchTool, MemoryStoreTool, MemoryStatsTool
+- <Badge text="New" variant="success" /> **ROADMAP.md** and **Docs Sync Process** in CLAUDE.md for tracking future API → docs gaps
+
+### Changed
+
+- <Badge text="Changed" variant="note" /> **Hybrid search schema** updated: added `use_entity_extraction`, `game`, `use_graph`, `graph_depth` fields
+- <Badge text="Changed" variant="note" /> **Agent tools count** updated from 3 to 6 tools
+- <Badge text="Changed" variant="note" /> **OpenAPI spec** expanded from 9 to 22 endpoints (v2.0)
+- <Badge text="Changed" variant="note" /> **API Overview** page updated with complete endpoint listing
+- <Badge text="Changed" variant="note" /> **Sidebar** reorganized with 8 new API Reference entries
+
+### Fixed
+
+- <Badge text="Fixed" variant="tip" /> Hybrid search response schema corrected to include `vector_count`, `graph_count`, `merged_count`, `entities_found`
+- <Badge text="Fixed" variant="tip" /> Agent tool descriptions updated to match actual registered tools
+- <Badge text="Fixed" variant="tip" /> Embeddings dimension documented as 1024 (was generically described)
+
+---
+
 ## [2026-01-19] - API Gateway Updates
 
 ### Added
+
 - <Badge text="New" variant="success" /> Privacy-focused analytics on documentation site
 - <Badge text="New" variant="success" /> Comprehensive SEO metadata for all public sites
 - <Badge text="New" variant="success" /> Sitemap generation for improved search indexing
 
 ### Changed
+
 - Improved API documentation with interactive OpenAPI explorer
 
 ---
@@ -34,11 +63,13 @@ Features and changes in development, not yet deployed to production.
 ## [2026-01-16] - Public Launch
 
 ### Added
+
 - <Badge text="New" variant="success" /> **API Gateway** at `api.solidrust.ai` - Public endpoint for all API calls
 - <Badge text="New" variant="success" /> **Documentation Site** at `docs.solidrust.ai` - Comprehensive API documentation
 - <Badge text="New" variant="success" /> **PAM Platform** - API key management and billing via `console.solidrust.ai`
 
 ### API Endpoints
+
 - `/v1/chat/completions` - OpenAI-compatible chat completions
 - `/v1/embeddings` - Vector embeddings using bge-m3 model
 - `/v1/models` - List available models
@@ -52,11 +83,13 @@ Features and changes in development, not yet deployed to production.
 ## [2025-12-01] - Infrastructure Foundation
 
 ### Added
+
 - Initial vLLM inference deployment with Qwen3-4B model
 - LiteLLM proxy for OpenAI compatibility
 - Embeddings service with bge-m3 model
 
 ### Infrastructure
+
 - Kubernetes cluster with 12 nodes (including 5 GPU nodes)
 - Automatic failover to Claude Haiku when vLLM is unavailable
 

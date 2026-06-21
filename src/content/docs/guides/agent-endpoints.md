@@ -210,7 +210,7 @@ print(f"Agent has access to {tools['count']} tools:\n")
 
 for tool in tools["tools"]:
     print(f"- {tool['name']}: {tool['description']}")
-    print(f"  Parameters: {list(tool.get('parameters', {}).keys())}\n")
+    print(f"  Parameters: {list(tool.get('parameters', {}).get('properties', {}).keys())}\n")
 ```
 
 ### Response Example
@@ -244,15 +244,40 @@ for tool in tools["tools"]:
         "depth": "integer",
         "relationship_types": "array"
       }
+    },
+    {
+      "name": "MemorySearchTool",
+      "description": "Search companion memory across all stores",
+      "parameters": {
+        "companion_id": "string",
+        "query": "string",
+        "max_results": "integer"
+      }
+    },
+    {
+      "name": "MemoryStoreTool",
+      "description": "Store a fact for future recall",
+      "parameters": {
+        "companion_id": "string",
+        "content": "string",
+        "importance": "integer"
+      }
+    },
+    {
+      "name": "MemoryStatsTool",
+      "description": "Check memory system health and population",
+      "parameters": {
+        "companion_id": "string"
+      }
     }
   ],
-  "count": 3
+  "count": 6
 }
 ```
 
 ## Built-in Tools
 
-The agent has access to these RAG tools:
+The agent has access to six tools — three RAG tools and three memory tools:
 
 ### SemanticSearchTool
 
@@ -298,6 +323,48 @@ Explores entity relationships in the knowledge graph.
 - `relationship_types` (array): Filter by relationship types
 - `direction` (string): "outgoing", "incoming", or "both" (default: "both")
 
+### MemorySearchTool
+
+Searches companion memory across all stores (vector, keyword, graph, knowledge base).
+
+**When the agent uses it:**
+- Questions about past conversations or user preferences
+- Recalling stored facts
+- "What do I know about X?" queries
+
+**Parameters:**
+- `companion_id` (string): Companion identifier (default: "hermes")
+- `query` (string): Natural language query for memory search
+- `max_results` (integer): Maximum results (default: 10)
+- `search_knowledge_base` (boolean): Also search KB (default: true)
+
+### MemoryStoreTool
+
+Stores important facts for future recall across conversations.
+
+**When the agent uses it:**
+- Key decisions made
+- User preferences learned
+- Facts that should persist
+
+**Parameters:**
+- `companion_id` (string): Companion identifier (default: "hermes")
+- `content` (string): Clear factual statement to store
+- `importance` (integer): 1-10 score (default: 5)
+- `tags` (array): Categorization tags
+- `source` (string): Origin (default: "agent")
+
+### MemoryStatsTool
+
+Checks memory system health and population.
+
+**When the agent uses it:**
+- Verifying memory system is working
+- Understanding how much is stored
+
+**Parameters:**
+- `companion_id` (string): Companion identifier (default: "hermes")
+
 ## Health Check
 
 Verify agent service is running:
@@ -312,7 +379,7 @@ curl -X GET "https://api.solidrust.ai/v1/agent/health" \
 {
   "status": "healthy",
   "service": "agent",
-  "tools_available": 3
+  "tools_available": 6
 }
 ```
 
