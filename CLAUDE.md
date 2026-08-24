@@ -2,7 +2,11 @@
 
 **Role**: Public documentation for the SolidRusT AI inference platform.
 **URL**: <https://docs.solidrust.ai>
-**Stack**: Astro 5 + Starlight + Tailwind CSS
+**Stack**: Astro 5 + Starlight
+
+**Brand lock:** [`DESIGN.md`](./DESIGN.md) points at
+`../solidrust-ai.github.io/DESIGN.md`. Implement it via `src/styles/custom.css`.
+Do not invent a second palette. Not the solidrust.net or Carbon Ashes brand.
 
 ---
 
