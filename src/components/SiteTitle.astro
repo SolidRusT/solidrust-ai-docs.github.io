@@ -1,8 +1,4 @@
 ---
-/**
- * Custom SiteTitle component to match solidrust.ai marketing site branding
- * Renders "SolidRusT.ai" with green accent on ".ai" and version badge
- */
 import type { Props } from '@astrojs/starlight/props';
 import VersionBadge from './VersionBadge.astro';
 ---
@@ -28,23 +24,22 @@ import VersionBadge from './VersionBadge.astro';
   }
 
   .brand-text {
-    font-family: Inter, system-ui, -apple-system, sans-serif;
+    font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--sl-color-text);
   }
 
   .brand-accent {
-    color: #22c55e;
+    color: #C96A32;
   }
 
-  /* Ensure proper contrast in both modes */
   :global([data-theme='dark']) .brand-text {
-    color: #fafafa;
+    color: #F2EDE6;
   }
 
   :global([data-theme='light']) .brand-text,
   :global(:root:not([data-theme='dark'])) .brand-text {
-    color: #18181b;
+    color: #11161B;
   }
 </style>

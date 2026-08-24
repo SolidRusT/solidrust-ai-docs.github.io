@@ -1,35 +1,30 @@
-/* Custom styles for SolidRusT AI docs */
-/* Aligned with solidrust.ai marketing site branding */
-/*
- * Brand colors from marketing site:
- * - Primary: #22c55e (green-500) to #16a34a (green-600)
- * - Accent: #a855f7 (purple-500)
- * - Surface: zinc scale (#09090b to #fafafa)
- */
-
-/* ==========================================================================
-   Accent Colors - Safe to override, Starlight uses these for highlights
-   ========================================================================== */
+/* SolidRusT AI docs — implements ../solidrust-ai.github.io/DESIGN.md */
 
 :root {
-  /* Light mode accent - darker green for contrast on light backgrounds */
-  --sl-color-accent-low: #dcfce7;   /* green-100 - subtle backgrounds */
-  --sl-color-accent: #16a34a;       /* green-600 - primary accent */
-  --sl-color-accent-high: #14532d;  /* green-900 - high contrast text */
+  --sl-color-accent-low: #F3E0D1;
+  --sl-color-accent: #723312;
+  --sl-color-accent-high: #2F1508;
+  --sl-font: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
 [data-theme='dark'] {
-  /* Dark mode accent - lighter green for contrast on dark backgrounds */
-  --sl-color-accent-low: #14532d;   /* green-900 - subtle backgrounds */
-  --sl-color-accent: #22c55e;       /* green-500 - primary accent */
-  --sl-color-accent-high: #86efac;  /* green-300 - high contrast text */
+  --sl-color-accent-low: #4E230D;
+  --sl-color-accent: #B5521C;
+  --sl-color-accent-high: #E5B894;
+  --sl-color-white: #F2EDE6;
+  --sl-color-gray-1: #E6EAEE;
+  --sl-color-gray-2: #C5CDD6;
+  --sl-color-gray-3: #9AA6B2;
+  --sl-color-gray-4: #52606E;
+  --sl-color-gray-5: #2A333D;
+  --sl-color-gray-6: #1A2128;
+  --sl-color-black: #0B0E12;
+  --sl-color-bg: #0B0E12;
+  --sl-color-bg-nav: #11161B;
+  --sl-color-bg-sidebar: #11161B;
 }
 
-/* ==========================================================================
-   Header Logo Sizing - Constrain oversized logo
-   ========================================================================== */
-
-/* Constrain logo size in header to match text height */
 header .site-title img,
 header [data-logo] img,
 .sl-site-title img {
@@ -38,7 +33,6 @@ header [data-logo] img,
   height: auto !important;
 }
 
-/* Ensure logo container doesn't expand beyond needed */
 header .site-title,
 .sl-site-title {
   display: flex;
@@ -46,42 +40,18 @@ header .site-title,
   gap: 0.5rem;
 }
 
-/* ==========================================================================
-   Site Title Styling - Match marketing site "SolidRusT.ai" look
-   ========================================================================== */
-
-/* Style the site title link in the header */
 .site-title {
   font-weight: 700 !important;
-  font-family: Inter, system-ui, -apple-system, sans-serif !important;
+  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif !important;
 }
-
-/* ==========================================================================
-   Dark Mode Enhancements - Subtle gradient like marketing site
-   ========================================================================== */
-
-[data-theme='dark'] body {
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 197, 94, 0.06), transparent),
-    radial-gradient(ellipse 50% 50% at 100% 0%, rgba(168, 85, 247, 0.04), transparent);
-  background-attachment: fixed;
-}
-
-/* ==========================================================================
-   Code Block Styling
-   ========================================================================== */
 
 .expressive-code pre {
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
 }
-
-/* ==========================================================================
-   API Documentation Styling
-   ========================================================================== */
 
 .api-endpoint {
   background-color: var(--sl-color-gray-6);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   padding: 1rem;
   margin: 1rem 0;
   border: 1px solid var(--sl-color-gray-5);
@@ -89,51 +59,44 @@ header .site-title,
 
 .api-method {
   font-family: var(--sl-font-mono);
-  font-weight: bold;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
-.api-method-get { color: #22c55e; }
-.api-method-post { color: #3b82f6; }
-.api-method-put { color: #f59e0b; }
-.api-method-delete { color: #ef4444; }
+.api-method-get { color: #3F8F6B; }
+.api-method-post { color: #C96A32; }
+.api-method-put { color: #C9A227; }
+.api-method-delete { color: #C44536; }
 
-/* Response code badges */
 .response-code {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
+  border-radius: 2px;
   font-size: 0.75rem;
   font-weight: 600;
   font-family: var(--sl-font-mono);
 }
 
 .response-code-2xx {
-  background-color: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background-color: rgba(63, 143, 107, 0.15);
+  color: #3F8F6B;
 }
 
 .response-code-4xx {
-  background-color: rgba(234, 179, 8, 0.15);
-  color: #eab308;
+  background-color: rgba(201, 162, 39, 0.15);
+  color: #C9A227;
 }
 
 .response-code-5xx {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  background-color: rgba(196, 69, 54, 0.15);
+  color: #C44536;
 }
 
-/* ==========================================================================
-   UI Enhancements
-   ========================================================================== */
-
-/* Rounded buttons like marketing site */
 .sl-link-button {
-  border-radius: 0.75rem !important;
+  border-radius: 6px !important;
 }
 
-/* Custom scrollbar for dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 0.5rem;
 }
@@ -144,18 +107,13 @@ header .site-title,
 
 [data-theme='dark'] ::-webkit-scrollbar-thumb {
   background: var(--sl-color-gray-4);
-  border-radius: 9999px;
+  border-radius: 2px;
 }
 
-[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-  background: var(--sl-color-gray-3);
-}
-
-/* Selection color */
 ::selection {
-  background-color: rgba(34, 197, 94, 0.3);
+  background-color: rgba(181, 82, 28, 0.35);
 }
 
 [data-theme='dark'] ::selection {
-  color: white;
+  color: #F2EDE6;
 }

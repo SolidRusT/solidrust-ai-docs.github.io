@@ -1,11 +1,9 @@
 ---
 title: SolidRusT AI Documentation
-description: Complete API documentation for the SolidRusT AI inference platform
+description: API documentation for SolidRusT AI — OpenAI-compatible inference, embeddings, RAG, and agents.
 template: splash
 hero:
-  tagline: Enterprise-grade AI inference API with OpenAI-compatible endpoints
-  image:
-    file: ../../assets/logo.svg
+  tagline: OpenAI-compatible inference, embeddings, RAG, and agents — on iron we run ourselves.
   actions:
     - text: Get Started
       link: /getting-started/introduction/
@@ -20,29 +18,29 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Quick Links
 
-<CardGrid stagger>
+<CardGrid>
   <Card title="Chat Completions" icon="pencil">
-    Generate text responses using our AI models with the `/v1/chat/completions` endpoint.
+    Generate text with `/v1/chat/completions`.
     [Learn more](/api/chat-completions/)
   </Card>
   <Card title="Embeddings" icon="document">
-    Create vector embeddings for semantic search and RAG applications.
+    Vector embeddings for search and RAG.
     [Learn more](/api/embeddings/)
   </Card>
   <Card title="Python SDK" icon="seti:python">
-    Official Python client library with async support.
+    Official Python client with async support.
     [Get started](/sdks/python/)
   </Card>
   <Card title="JavaScript SDK" icon="seti:javascript">
-    TypeScript-first SDK for Node.js and browser environments.
+    TypeScript-first SDK for Node and the browser.
     [Get started](/sdks/javascript/)
   </Card>
 </CardGrid>
 
 ## Features
 
-- **OpenAI-Compatible API** - Drop-in replacement for OpenAI API calls
-- **Local Inference** - Models run on dedicated GPU infrastructure
-- **Failover Support** - Automatic failover to cloud providers when needed
-- **RAG Integration** - Built-in data layer for retrieval-augmented generation
-- **Tool Calling** - Native function/tool calling support for agent applications
+- **OpenAI-compatible API** — drop-in base URL
+- **Local inference** — models on dedicated GPUs
+- **Failover** — cloud providers when the rack needs help
+- **RAG** — built-in data layer
+- **Tool calling** — agents with function execution
