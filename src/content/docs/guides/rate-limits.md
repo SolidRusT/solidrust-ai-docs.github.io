@@ -7,28 +7,14 @@ Rate limits protect the API from abuse and ensure fair usage across all users. T
 
 ## Current Limits
 
-:::note[Limits by Tier]
-Rate limits vary by subscription tier. Upgrade at [console.solidrust.ai](https://console.solidrust.ai) for higher limits.
-:::
+**The console is the source of truth.** Artemis asks PAM to validate your
+key and reads `X-Rate-Limit` / `X-Tier` from that response. Docs do not
+own the numbers. If this page and the console disagree, the console wins.
 
-These numbers come from the console's `tier-limits` table (enforced at
-key-validation time). There is no "Basic" tier.
+See your live limits at [console.solidrust.ai](https://console.solidrust.ai).
 
-| Tier | Default req/min | Max req/min | API keys | Monthly quota | Scopes |
-|------|-----------------|-------------|----------|---------------|--------|
-| Free | 100 | 100 | 1 | 10,000 | `inference` |
-| Pro | 500 | 1,000 | 5 | 1,000,000 | `inference`, `embeddings` |
-| Enterprise | 2,000 | 10,000 | 20 | Unlimited | `inference`, `embeddings`, `agents` |
-
-Checkout prices live in the console. Do not copy dollar amounts from old
-marketing pages.
-
-### Token Limits
-
-| Parameter | Limit |
-|-----------|-------|
-| Chat context (`vllm-primary`) | 16,384 tokens (Gemma 4 12B QAT) |
-| Embeddings max input | 32,768 tokens (`Qwen/Qwen3-Embedding-0.6B`) |
+Token windows (model capacity, not billing) are documented under
+[Models](/api/models/) and [Context Limits](/guides/context-limits/).
 
 ## Rate Limit Headers
 

@@ -41,6 +41,9 @@ intentionally not documented.
 
 - [ ] First-party Python SDK — [#1](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/1)
 - [ ] First-party JS SDK — [#2](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/2)
+- [ ] Video tutorials — [#3](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/3) (no footage; page is a stub)
+- [ ] Customer ingest tenancy — [#4](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/4) (owner: srt-data-layer)
+- [ ] Clarity / SearXNG / Firecrawl public API — [#5](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/5)
 - [ ] `sources.md` / `stats.md` reference pages
 - [ ] Document memory endpoints if they become public
 - [ ] CI: fail if docs still mention `bge-m3`, `qwen3-4b`, or LiteLLM as live
