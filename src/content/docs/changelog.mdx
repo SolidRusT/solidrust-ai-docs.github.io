@@ -19,6 +19,18 @@ Features and changes in development, not yet deployed to production.
 
 ---
 
+## [2026-09-04] - Docs match live inference
+
+### Changed
+
+- <Badge text="Changed" variant="note" /> **Chat model** documented as `vllm-primary` → Gemma 4 12B IT QAT (`google/gemma-4-12B-it-qat-w4a16-ct`), 16,384 context. `qwen3-4b` is not a public id.
+- <Badge text="Changed" variant="note" /> **Embeddings model** documented as `Qwen/Qwen3-Embedding-0.6B` (1024-dim, 32,768 max input). `bge-m3` is not deployed.
+- <Badge text="Changed" variant="note" /> **LiteLLM** removed from the public request path. Chat completions are Artemis → vLLM. Agent chat may fall through to OpenRouter.
+- <Badge text="Changed" variant="note" /> **Rate limits** aligned to console `tier-limits` (Free / Pro / Enterprise). "Basic" tier removed.
+- <Badge text="Changed" variant="note" /> **Cluster size** stated as 14 nodes, 5 GPUs.
+
+---
+
 ## [2026-06-20] - Full API Documentation Alignment
 
 ### Added

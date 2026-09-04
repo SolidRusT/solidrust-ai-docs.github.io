@@ -76,7 +76,7 @@ for chunk in stream:
 
 ```python
 response = client.embeddings.create(
-    model="bge-m3",
+    model="Qwen/Qwen3-Embedding-0.6B",
     input="Text to embed"
 )
 

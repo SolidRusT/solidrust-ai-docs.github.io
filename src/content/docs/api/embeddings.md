@@ -3,7 +3,11 @@ title: Embeddings
 description: Create vector embeddings for semantic search and RAG
 ---
 
-Generate vector embeddings from input text using our embedding models.
+Generate vector embeddings from input text.
+
+Live model (2026-09-04): `Qwen/Qwen3-Embedding-0.6B`, 1024 dimensions,
+32768 max input tokens. Confirmed by `GET /v1/models` on the embeddings
+service and by `GET /v1/stats` on the data layer (`embedding_dimension`: 1024).
 
 ## Endpoint
 
@@ -15,7 +19,7 @@ POST /v1/embeddings
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `model` | string | Yes | Model ID to use (e.g., `bge-m3`) |
+| `model` | string | Yes | `Qwen/Qwen3-Embedding-0.6B` |
 | `input` | string/array | Yes | Text to embed (string or array of strings) |
 | `encoding_format` | string | No | `float` (default) or `base64` |
 
@@ -28,7 +32,7 @@ curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "bge-m3",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
     "input": "What is semantic search?"
   }'
 ```
@@ -40,7 +44,7 @@ curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "bge-m3",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
     "input": [
       "First document to embed",
       "Second document to embed",
@@ -58,10 +62,10 @@ curl https://api.solidrust.ai/v1/embeddings \
     {
       "object": "embedding",
       "index": 0,
-      "embedding": [0.0023, -0.0047, 0.0112, ...]
+      "embedding": [0.0023, -0.0047, 0.0112]
     }
   ],
-  "model": "bge-m3",
+  "model": "Qwen/Qwen3-Embedding-0.6B",
   "usage": {
     "prompt_tokens": 8,
     "total_tokens": 8
@@ -71,9 +75,11 @@ curl https://api.solidrust.ai/v1/embeddings \
 
 ## Embedding Dimensions
 
-| Model | Dimensions | Description |
-|-------|------------|-------------|
-| `bge-m3` | 1024 | Multilingual, high-quality embeddings |
+| Model | Dimensions | Max input |
+|-------|------------|-----------|
+| `Qwen/Qwen3-Embedding-0.6B` | 1024 | 32768 tokens |
+
+`bge-m3` is not deployed. Do not send that id.
 
 ## Use Cases
 

@@ -13,7 +13,7 @@ This guide provides complete working examples for integrating the SolidRusT AI A
 |---------|-------|
 | **Base URL** | `https://api.solidrust.ai/v1` |
 | **Chat Model** | `vllm-primary` |
-| **Embeddings Model** | `bge-m3` |
+| **Embeddings Model** | `Qwen/Qwen3-Embedding-0.6B` |
 | **API Keys** | [console.solidrust.ai](https://console.solidrust.ai) |
 
 ## Installation
@@ -329,7 +329,7 @@ client = OpenAI(
 
 # Single text embedding
 response = client.embeddings.create(
-    model="bge-m3",
+    model="Qwen/Qwen3-Embedding-0.6B",
     input="The quick brown fox jumps over the lazy dog."
 )
 
@@ -339,7 +339,7 @@ print(f"First 5 values: {embedding[:5]}")
 
 # Multiple texts at once
 response = client.embeddings.create(
-    model="bge-m3",
+    model="Qwen/Qwen3-Embedding-0.6B",
     input=[
         "First document text",
         "Second document text",
@@ -362,7 +362,7 @@ const client = new OpenAI({
 
 // Single text embedding
 const response = await client.embeddings.create({
-  model: 'bge-m3',
+  model: 'Qwen/Qwen3-Embedding-0.6B',
   input: 'The quick brown fox jumps over the lazy dog.',
 });
 
@@ -372,7 +372,7 @@ console.log(`First 5 values: ${embedding.slice(0, 5)}`);
 
 // Multiple texts at once
 const batchResponse = await client.embeddings.create({
-  model: 'bge-m3',
+  model: 'Qwen/Qwen3-Embedding-0.6B',
   input: [
     'First document text',
     'Second document text',
@@ -392,7 +392,7 @@ curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $SOLIDRUST_API_KEY" \
   -d '{
-    "model": "bge-m3",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
     "input": "The quick brown fox jumps over the lazy dog."
   }'
 
@@ -401,7 +401,7 @@ curl https://api.solidrust.ai/v1/embeddings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $SOLIDRUST_API_KEY" \
   -d '{
-    "model": "bge-m3",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
     "input": [
       "First document text",
       "Second document text",
@@ -424,7 +424,7 @@ curl https://api.solidrust.ai/v1/embeddings \
       "embedding": [0.0123, -0.0456, 0.0789, ...]
     }
   ],
-  "model": "bge-m3",
+  "model": "Qwen/Qwen3-Embedding-0.6B",
   "usage": {
     "prompt_tokens": 10,
     "total_tokens": 10
@@ -433,7 +433,7 @@ curl https://api.solidrust.ai/v1/embeddings \
 ```
 
 :::tip[Embedding Uses]
-The `bge-m3` model produces 1024-dimensional embeddings, ideal for:
+The `Qwen/Qwen3-Embedding-0.6B` model produces 1024-dimensional embeddings, ideal for:
 - Semantic search
 - Document similarity
 - Clustering

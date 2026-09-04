@@ -5,6 +5,9 @@ description: List available models on the SolidRusT AI platform
 
 Retrieve information about available models.
 
+Live IDs below were verified against the cluster on 2026-09-04
+(`vllm.lab.hq.solidrust.net` and `embeddings.lab.hq.solidrust.net`).
+
 ## List Models
 
 ```http
@@ -18,7 +21,11 @@ curl https://api.solidrust.ai/v1/models \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-### Response
+Chat completions are served by the vLLM chat deployment. Embeddings are a
+**separate** vLLM process — `GET /v1/models` on the chat base URL lists the
+chat alias. The embeddings model id is what `/v1/embeddings` expects.
+
+### Chat response (live)
 
 ```json
 {
@@ -27,20 +34,10 @@ curl https://api.solidrust.ai/v1/models \
     {
       "id": "vllm-primary",
       "object": "model",
-      "created": 1704067200,
-      "owned_by": "solidrust",
-      "permission": [],
-      "root": "vllm-primary",
-      "parent": null
-    },
-    {
-      "id": "bge-m3",
-      "object": "model",
-      "created": 1704067200,
-      "owned_by": "solidrust",
-      "permission": [],
-      "root": "bge-m3",
-      "parent": null
+      "owned_by": "vllm",
+      "root": "google/gemma-4-12B-it-qat-w4a16-ct",
+      "parent": null,
+      "max_model_len": 16384
     }
   ]
 }
@@ -50,32 +47,36 @@ curl https://api.solidrust.ai/v1/models \
 
 ### Chat Models
 
-| Model ID | Description | Context Length | Best For |
-|----------|-------------|----------------|----------|
-| `vllm-primary` | Recommended alias (currently Qwen3-4B) | 8192 | All chat tasks - use this |
-| `qwen3-4b` | Direct model reference | 8192 | When you need a specific model |
+| Model ID | Currently serving | Context | Best For |
+|----------|-------------------|---------|----------|
+| `vllm-primary` | Gemma 4 12B IT QAT (`google/gemma-4-12B-it-qat-w4a16-ct`) | 16384 | All chat tasks — use this alias |
 
 :::tip[Use vllm-primary]
-Always use `vllm-primary` in your code. This alias automatically routes to our best available model and ensures your integration survives model upgrades without code changes.
+Always use `vllm-primary` in your code. The alias is the public contract.
+The weights behind it change; your code should not.
 :::
+
+There is **no** public `qwen3-4b` id. That model is gone.
 
 ### Embedding Models
 
-| Model ID | Dimensions | Max Input | Best For |
+| Model ID | Dimensions | Max input | Best For |
 |----------|------------|-----------|----------|
-| `bge-m3` | 1024 | 8192 tokens | Semantic search, RAG |
+| `Qwen/Qwen3-Embedding-0.6B` | 1024 | 32768 tokens | Semantic search, RAG |
+
+There is **no** public `bge-m3` id. The embedding service lists
+`Qwen/Qwen3-Embedding-0.6B` only.
 
 ## Model Selection
 
-- **Chat completions**: Use `vllm-primary`
-- **Embeddings**: Use `bge-m3`
+- **Chat completions**: `vllm-primary`
+- **Embeddings**: `Qwen/Qwen3-Embedding-0.6B`
 
-## Failover Behavior
+## Failover
 
-When local GPU infrastructure is unavailable, requests automatically route to cloud providers:
+`POST /v1/chat/completions` goes Artemis → vLLM. LiteLLM is retired.
 
-| Primary | Failover Chain |
-|---------|----------------|
-| `vllm-primary` | OpenAI GPT-4o-mini → Claude Haiku |
-
-This ensures high availability while maintaining API compatibility. You can detect failover by checking the `model` field in responses - it will indicate which model actually served the request.
+The **agent** endpoint (`POST /v1/agent/chat`) has a separate provider chain:
+local `vllm-primary`, then OpenRouter (`openrouter/auto`) if the data-layer
+agent health check says vLLM is down. That failover does **not** apply to
+plain `/v1/chat/completions`.

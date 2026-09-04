@@ -72,7 +72,7 @@ paths:
   /v1/embeddings:
     post:
       summary: Create embeddings
-      description: Creates an embedding vector representing the input text using the bge-m3 model (1024 dimensions).
+      description: Creates an embedding vector representing the input text using the Qwen/Qwen3-Embedding-0.6B model (1024 dimensions).
       operationId: createEmbedding
       tags:
         - Embeddings
@@ -618,7 +618,7 @@ components:
         model:
           type: string
           description: ID of the model to use
-          example: bge-m3
+          example: Qwen/Qwen3-Embedding-0.6B
         input:
           oneOf:
             - type: string
@@ -651,7 +651,7 @@ components:
                 type: array
                 items:
                   type: number
-                description: The embedding vector (1024 dimensions for bge-m3)
+                description: The embedding vector (1024 dimensions for Qwen/Qwen3-Embedding-0.6B)
         model:
           type: string
         usage:

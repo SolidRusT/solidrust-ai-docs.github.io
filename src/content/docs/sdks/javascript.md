@@ -58,7 +58,7 @@ for await (const chunk of stream) {
 
 ```typescript
 const response = await client.embeddings.create({
-  model: 'bge-m3',
+  model: 'Qwen/Qwen3-Embedding-0.6B',
   input: 'Text to embed',
 });
 

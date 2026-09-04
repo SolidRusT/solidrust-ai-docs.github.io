@@ -11,20 +11,24 @@ Rate limits protect the API from abuse and ensure fair usage across all users. T
 Rate limits vary by subscription tier. Upgrade at [console.solidrust.ai](https://console.solidrust.ai) for higher limits.
 :::
 
-| Tier | Requests/min | Requests/hour | Requests/day | Tokens/min |
-|------|-------------|---------------|--------------|------------|
-| Free | 10 | 100 | 500 | 10,000 |
-| Basic | 60 | 1,000 | 10,000 | 100,000 |
-| Pro | 300 | 5,000 | 50,000 | 500,000 |
-| Enterprise | Custom | Custom | Custom | Custom |
+These numbers come from the console's `tier-limits` table (enforced at
+key-validation time). There is no "Basic" tier.
+
+| Tier | Default req/min | Max req/min | API keys | Monthly quota | Scopes |
+|------|-----------------|-------------|----------|---------------|--------|
+| Free | 100 | 100 | 1 | 10,000 | `inference` |
+| Pro | 500 | 1,000 | 5 | 1,000,000 | `inference`, `embeddings` |
+| Enterprise | 2,000 | 10,000 | 20 | Unlimited | `inference`, `embeddings`, `agents` |
+
+Checkout prices live in the console. Do not copy dollar amounts from old
+marketing pages.
 
 ### Token Limits
 
 | Parameter | Limit |
 |-----------|-------|
-| Max tokens per request | 4,096 |
-| Max context window | 4,096 tokens (Qwen3-4B) |
-| Max concurrent connections | 5 (Free), 20 (Basic), 100 (Pro) |
+| Chat context (`vllm-primary`) | 16,384 tokens (Gemma 4 12B QAT) |
+| Embeddings max input | 32,768 tokens (`Qwen/Qwen3-Embedding-0.6B`) |
 
 ## Rate Limit Headers
 

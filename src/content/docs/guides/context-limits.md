@@ -17,59 +17,32 @@ Exceeding these limits results in errors or truncated responses.
 
 ## Model Context Windows
 
-### vllm-primary (Qwen2.5-Coder-3B-Instruct)
+### vllm-primary (Gemma 4 12B IT QAT)
 
-Our primary self-hosted model.
+Public chat alias. Live `root` on the vLLM chat service
+(2026-09-04): `google/gemma-4-12B-it-qat-w4a16-ct`.
 
 | Limit | Value | Notes |
 |-------|-------|-------|
-| **Max Input Tokens** | 8,192 | Input messages + system prompt |
-| **Max Output Tokens** | 2,048 | Configurable via `max_tokens` parameter |
-| **Total Context** | 32,768 | Full model context window |
-| **Recommended Input** | ≤6,000 | Leave room for output |
+| **Total context** | 16,384 | `max_model_len` from `/v1/models` |
+| **Output** | via `max_tokens` | Leave room inside the 16k window |
 
-**Best for:**
-- Code generation and explanation
-- Technical documentation Q&A
-- API integration guidance
-- Multi-turn conversations (with history management)
+`POST /v1/chat/completions` does **not** fail over to OpenAI or Claude.
+LiteLLM is retired. If vLLM is down, that route errors.
 
-### Fallback Models
-
-When primary model is unavailable, requests automatically failover:
-
-#### OpenAI GPT-4o-mini
-
-| Limit | Value |
-|-------|-------|
-| **Max Input Tokens** | 128,000 |
-| **Max Output Tokens** | 16,384 |
-| **Total Context** | 128,000 |
-
-**Cost:** $0.15/1M input tokens, $0.60/1M output tokens
-
-#### Anthropic Claude Haiku
-
-| Limit | Value |
-|-------|-------|
-| **Max Input Tokens** | 200,000 |
-| **Max Output Tokens** | 4,096 |
-| **Total Context** | 200,000 |
-
-**Cost:** $0.25/1M input tokens, $1.25/1M output tokens  
-**Note:** Rate limited, used as last resort
+Agent chat (`POST /v1/agent/chat`) can fall through to OpenRouter
+(`openrouter/auto`) — that is a different endpoint.
 
 ## Embeddings Model
 
-### bge-m3
+### Qwen/Qwen3-Embedding-0.6B
 
-Used for semantic search and RAG.
+Used for semantic search and RAG. Not `bge-m3`.
 
 | Limit | Value | Notes |
 |-------|-------|-------|
-| **Max Input Tokens** | 8,192 | Per text input |
-| **Embedding Dimensions** | 1,024 | Vector size |
-| **Batch Size** | 32 | Max texts per request |
+| **Max Input Tokens** | 32,768 | `max_model_len` on the embeddings service |
+| **Embedding Dimensions** | 1,024 | Confirmed by data-layer `/v1/stats` |
 
 **Best practices:**
 - Chunk documents to ≤512 tokens for optimal semantic search
@@ -398,7 +371,7 @@ When using RAG, retrieved documents consume input tokens.
 
 ### Example Token Budget
 
-For `vllm-primary` (8,192 max input tokens):
+For `vllm-primary` (16,384 total context):
 
 ```
 Token Budget:

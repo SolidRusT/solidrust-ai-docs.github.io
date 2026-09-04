@@ -39,7 +39,7 @@ client = OpenAI(
 class SolidRustEmbeddings(embedding_functions.EmbeddingFunction):
     def __call__(self, input):
         response = client.embeddings.create(
-            model="bge-m3",
+            model="Qwen/Qwen3-Embedding-0.6B",
             input=input
         )
         return [item.embedding for item in response.data]

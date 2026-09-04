@@ -3,7 +3,9 @@ title: Error Handling
 description: Understanding and handling API errors from Artemis Gateway
 ---
 
-The SolidRusT AI API (served via Artemis Gateway and LiteLLM proxy) uses standard HTTP status codes and returns detailed error information in JSON format compatible with the OpenAI API specification.
+The SolidRusT AI API is served by Artemis Gateway (nginx on AWS) in front of
+vLLM chat, vLLM embeddings, and the data layer. Errors are JSON. Chat
+completions are OpenAI-compatible.
 
 ## Error Response Format
 
@@ -78,7 +80,7 @@ All errors follow this structure:
 ```json
 {
   "error": {
-    "message": "Model 'invalid-model' not found. Available models: qwen3-4b, vllm-primary",
+    "message": "Model 'invalid-model' not found. Available models: vllm-primary",
     "type": "invalid_request_error",
     "code": "model_not_found",
     "param": "model"
@@ -138,24 +140,14 @@ X-RateLimit-Reset: 1704067260
 
 ## Server Errors (500/502/503/504)
 
-### vLLM Unavailable (Failover Active)
+### vLLM Unavailable
 
-```json
-{
-  "error": {
-    "message": "Primary model temporarily unavailable, request routed to fallback",
-    "type": "server_error",
-    "code": "failover_active"
-  }
-}
-```
+`POST /v1/chat/completions` has no cloud failover. If the vLLM chat
+deployment is down, Artemis returns a 502/503/504.
 
-:::caution[Failover Behavior]
-When vLLM is unavailable, chat completion requests automatically fail over to Claude Haiku via LiteLLM. During failover:
-- Response quality may differ slightly
-- Model name in response will indicate the fallback model
-- Pricing may vary (Claude Haiku rates apply)
-:::
+Agent chat (`POST /v1/agent/chat`) is different: the data layer can fall
+through to OpenRouter when local vLLM is unreachable. Check
+`GET /v1/agent/health` for provider status.
 
 ### Internal Server Error
 
@@ -304,41 +296,15 @@ try {
 }
 ```
 
-## Failover Architecture
-
-The SolidRusT AI platform includes automatic failover for high availability:
+## Request Path
 
 ```
-Request → Artemis Gateway → LiteLLM Proxy → vLLM (primary)
-                                         ↓ (if unavailable)
-                                    Claude Haiku (fallback)
+POST /v1/chat/completions  → Artemis → vLLM chat (vllm-primary)
+POST /v1/embeddings        → Artemis → vLLM embeddings (Qwen3-Embedding-0.6B)
+/data/v1/* and /v1/agent/* → Artemis → data layer
 ```
 
-### What Triggers Failover
-
-- vLLM pod is scaling or restarting
-- GPU maintenance window
-- Model loading in progress
-- Unexpected vLLM crash
-
-### Detecting Failover in Responses
-
-Check the `model` field in the response:
-
-```python
-response = client.chat.completions.create(...)
-if 'claude' in response.model.lower():
-    print("Note: Response served by fallback model")
-```
-
-### Failover Considerations
-
-| Aspect | vLLM (Primary) | Claude Haiku (Fallback) |
-|--------|----------------|------------------------|
-| Latency | Lower (~50ms TTFB) | Higher (~200ms TTFB) |
-| Cost | Free tier included | Metered usage |
-| Context | 4K tokens | 200K tokens |
-| Capabilities | Qwen3-4B | Claude Haiku |
+LiteLLM is not in this path. Do not document it as if it were.
 
 ## Related
 

@@ -18,7 +18,7 @@ https://api.solidrust.ai
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/v1/chat/completions` | POST | Generate chat completions (OpenAI-compatible) |
-| `/v1/embeddings` | POST | Create text embeddings (bge-m3, 1024-dim) |
+| `/v1/embeddings` | POST | Create text embeddings (`Qwen/Qwen3-Embedding-0.6B`, 1024-dim) |
 | `/v1/models` | GET | List available models |
 
 ### Agent (Tool-Augmented Chat)
