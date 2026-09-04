@@ -14,6 +14,10 @@
 - **D3 — Automated drift.** Compare docs OpenAPI + model pages against
   live `/v1/models` and `/data/openapi.json` in CI.
 
+## Later (roadmap, not defects)
+
+- First-party SDKs: [#1](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/1) Python, [#2](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/2) JS. Docs now tell people to use the OpenAI SDK.
+
 ## WATCH
 
 - Historical changelog entries (2025-12-01 LiteLLM, bge-m3) are history.

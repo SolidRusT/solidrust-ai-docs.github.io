@@ -1,22 +1,24 @@
 ---
 title: SDK Overview
-description: Official SDKs for the SolidRusT AI API
+description: How to call the SolidRusT AI API from Python, JavaScript, and curl
 ---
 
-We provide official SDKs to simplify integration with the SolidRusT AI API.
+There is **no** first-party `solidrust-ai` / `@solidrust/ai` package today.
+Those names were "Coming Soon" with no issue and no roadmap item. That is
+fixed: they are tracked as Later work.
 
-## Available SDKs
+| Language | What you use now | First-party SDK |
+|----------|------------------|-----------------|
+| Python | Official `openai` SDK | [#1](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/1) |
+| JavaScript/TypeScript | Official `openai` SDK | [#2](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/2) |
+| curl | HTTPS | — |
 
-| Language | Package | Status |
-|----------|---------|--------|
-| Python | `solidrust-ai` | Coming Soon |
-| JavaScript/TypeScript | `@solidrust/ai` | Coming Soon |
+## Using the OpenAI SDKs
 
-## Using OpenAI SDKs
+OpenAI-compatible chat and embeddings. Change the base URL. Data-layer
+(` /data/v1/... `) is a separate REST surface — not in the OpenAI client.
 
-Since SolidRusT AI provides an OpenAI-compatible API, you can use the official OpenAI SDKs with minimal configuration changes.
-
-### Python (openai)
+### Python
 
 ```python
 from openai import OpenAI
@@ -27,12 +29,12 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="vllm-primary",
+    model="vllm-primary",  # Gemma 4 12B IT QAT
     messages=[{"role": "user", "content": "Hello!"}]
 )
 ```
 
-### JavaScript (openai)
+### JavaScript
 
 ```javascript
 import OpenAI from 'openai';
@@ -43,24 +45,9 @@ const client = new OpenAI({
 });
 
 const response = await client.chat.completions.create({
-  model: 'vllm-primary',
+  model: 'vllm-primary', // Gemma 4 12B IT QAT
   messages: [{ role: 'user', content: 'Hello!' }],
 });
 ```
 
-## SDK Features (Coming Soon)
-
-Our official SDKs will provide additional features beyond OpenAI compatibility:
-
-- **RAG Integration** - Built-in methods for the data layer API
-- **Tool Calling Helpers** - Simplified function/tool calling
-- **Automatic Retry** - Configurable retry logic with backoff
-- **Streaming Utilities** - Helper functions for SSE handling
-- **Type Definitions** - Full TypeScript support
-
-## Contributing
-
-SDKs are open source. Contributions welcome:
-
-- Python SDK: Coming soon
-- JavaScript SDK: Coming soon
+See [SDK Usage](/sdks/usage/) for streaming, embeddings, and curl.

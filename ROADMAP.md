@@ -39,6 +39,8 @@ intentionally not documented.
 
 ## Future Work
 
+- [ ] First-party Python SDK — [#1](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/1)
+- [ ] First-party JS SDK — [#2](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/2)
 - [ ] `sources.md` / `stats.md` reference pages
 - [ ] Document memory endpoints if they become public
 - [ ] CI: fail if docs still mention `bge-m3`, `qwen3-4b`, or LiteLLM as live

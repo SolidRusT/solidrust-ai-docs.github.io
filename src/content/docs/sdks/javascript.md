@@ -1,13 +1,10 @@
 ---
 title: JavaScript/TypeScript SDK
-description: JavaScript and TypeScript client library for SolidRusT AI
+description: Call SolidRusT AI from JavaScript with the OpenAI SDK
 ---
 
-:::note[Coming Soon]
-The official `@solidrust/ai` npm package is under development.
-:::
-
-In the meantime, use the OpenAI JavaScript SDK with our API.
+There is no `@solidrust/ai` package on npm. Use the official OpenAI SDK.
+First-party SDK: [issue #2](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/2).
 
 ## Installation
 

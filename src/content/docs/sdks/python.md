@@ -1,13 +1,10 @@
 ---
 title: Python SDK
-description: Python client library for SolidRusT AI
+description: Call SolidRusT AI from Python with the OpenAI SDK
 ---
 
-:::note[Coming Soon]
-The official `solidrust-ai` Python package is under development.
-:::
-
-In the meantime, use the OpenAI Python SDK with our API.
+There is no `solidrust-ai` package on PyPI. Use the official OpenAI SDK.
+First-party SDK: [issue #1](https://poseidon.hq.solidrust.net:30008/shaun/solidrust-ai-docs.github.io/issues/1).
 
 ## Installation
 
