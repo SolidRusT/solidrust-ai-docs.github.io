@@ -9,8 +9,8 @@ hero:
       link: /getting-started/introduction/
       icon: right-arrow
       variant: primary
-    - text: API Reference
-      link: /api/overview/
+    - text: Get an API key
+      link: https://console.solidrust.ai
       variant: secondary
 ---
 
@@ -27,20 +27,20 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     Vector embeddings for search and RAG.
     [Learn more](/api/embeddings/)
   </Card>
-  <Card title="Python SDK" icon="seti:python">
-    Official Python client with async support.
-    [Get started](/sdks/python/)
+  <Card title="Python">
+    Official `openai` SDK. Base URL `https://api.solidrust.ai/v1`.
+    [Usage](/sdks/python/)
   </Card>
-  <Card title="JavaScript SDK" icon="seti:javascript">
-    TypeScript-first SDK for Node and the browser.
-    [Get started](/sdks/javascript/)
+  <Card title="JavaScript">
+    Official `openai` SDK. Same base URL.
+    [Usage](/sdks/javascript/)
   </Card>
 </CardGrid>
 
 ## Features
 
 - **OpenAI-compatible API** — drop-in base URL
-- **Local inference** — models on dedicated GPUs
-- **Failover** — cloud providers when the rack needs help
-- **RAG** — built-in data layer
-- **Tool calling** — agents with function execution
+- **Local inference** — Gemma 4 12B on GPUs we run
+- **RAG** — data layer on the same key
+- **Get a key** — [console.solidrust.ai](https://console.solidrust.ai)
+- **Product site** — [solidrust.ai](https://solidrust.ai)

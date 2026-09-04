@@ -1,0 +1,36 @@
+# SolidRusT AI
+
+> OpenAI-compatible inference, embeddings, RAG, and agents on GPUs we run ourselves.
+
+Product: https://solidrust.ai
+Keys: https://console.solidrust.ai
+API: https://api.solidrust.ai
+Docs: https://docs.solidrust.ai
+Status: https://status.solidrust.ai
+
+## Getting started
+
+- [Introduction](https://docs.solidrust.ai/getting-started/introduction/): what the API is
+- [Quick start](https://docs.solidrust.ai/getting-started/quickstart/): first chat completion
+- [API keys](https://docs.solidrust.ai/getting-started/api-keys/): mint a key in the console
+- [Authentication](https://docs.solidrust.ai/getting-started/authentication/): Bearer token
+
+## API
+
+- [Overview](https://docs.solidrust.ai/api/overview/)
+- [Chat completions](https://docs.solidrust.ai/api/chat-completions/): `vllm-primary` (Gemma 4 12B)
+- [Embeddings](https://docs.solidrust.ai/api/embeddings/): `Qwen/Qwen3-Embedding-0.6B`
+- [Models](https://docs.solidrust.ai/api/models/)
+- [Agent chat](https://docs.solidrust.ai/api/agent-chat/)
+- [Semantic search](https://docs.solidrust.ai/api/semantic-search/)
+- [Hybrid search](https://docs.solidrust.ai/api/hybrid-search/)
+- [Ingestion](https://docs.solidrust.ai/api/ingest/)
+- [OpenAPI](https://api.solidrust.ai/data/docs)
+
+## SDKs
+
+There is no first-party package. Use the official OpenAI SDK pointed at `https://api.solidrust.ai/v1`.
+
+- [Usage](https://docs.solidrust.ai/sdks/usage/)
+- [Python](https://docs.solidrust.ai/sdks/python/)
+- [JavaScript](https://docs.solidrust.ai/sdks/javascript/)
