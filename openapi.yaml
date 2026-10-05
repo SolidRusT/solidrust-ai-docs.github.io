@@ -1,0 +1,1502 @@
+openapi: 3.1.0
+info:
+  title: SolidRusT AI API
+  description: |
+    OpenAI-compatible API for AI inference with RAG (Retrieval-Augmented Generation) capabilities.
+
+    ## Authentication
+    All endpoints require an API key passed via the `Authorization` header:
+    ```
+    Authorization: Bearer YOUR_API_KEY
+    ```
+
+    Get your API key at [console.solidrust.ai](https://console.solidrust.ai).
+
+    ## Base URL
+    ```
+    https://api.solidrust.ai
+    ```
+
+    ## Endpoints Overview
+    - **Inference** (`/v1/*`): OpenAI-compatible chat and embeddings
+    - **RAG** (`/data/v1/*`): Semantic, keyword, hybrid, knowledge graph, and graph traversal queries
+    - **Ingestion** (`/data/v1/ingest/*`): Document and batch ingestion with idempotency
+    - **Agent** (`/v1/agent/*`): Tool-enabled AI assistant with RAG + memory capabilities
+    - **Management** (`/data/v1/*`): Sources, stats, and health monitoring
+  version: 2.0.0
+  contact:
+    name: SolidRusT Networks
+    url: https://solidrust.ai
+  license:
+    name: Proprietary
+    url: https://solidrust.ai/terms
+
+servers:
+  - url: https://api.solidrust.ai
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  # =========================================================================
+  # Inference Endpoints
+  # =========================================================================
+  /v1/chat/completions:
+    post:
+      summary: Create chat completion
+      description: Creates a model response for the given chat conversation. OpenAI-compatible endpoint.
+      operationId: createChatCompletion
+      tags:
+        - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCompletionRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/embeddings:
+    post:
+      summary: Create embeddings
+      description: Creates an embedding vector representing the input text using the Qwen/Qwen3-Embedding-0.6B model (1024 dimensions).
+      operationId: createEmbedding
+      tags:
+        - Embeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbeddingRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbeddingResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/models:
+    get:
+      summary: List models
+      description: Lists the currently available models.
+      operationId: listModels
+      tags:
+        - Models
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # =========================================================================
+  # RAG Endpoints
+  # =========================================================================
+  /data/v1/query/semantic:
+    post:
+      summary: Semantic search
+      description: |
+        Performs semantic similarity search across the knowledge base using vector embeddings.
+        Returns documents ranked by semantic similarity to the query.
+      operationId: semanticSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SemanticQuery"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SemanticQueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/keyword:
+    post:
+      summary: Keyword search
+      description: |
+        Performs full-text keyword search with typo tolerance via MeiliSearch.
+        Supports filtering by source, content type, sorting, and pagination.
+      operationId: keywordSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeywordQuery"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KeywordQueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/hybrid:
+    post:
+      summary: Hybrid search
+      description: |
+        Combines semantic similarity search with knowledge graph relationships.
+        Extracts entities from the query using a dictionary-based extractor,
+        then merges and re-scores vector + graph results with configurable weighting.
+      operationId: hybridSearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HybridQuery"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HybridQueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/knowledge-graph:
+    post:
+      summary: Knowledge graph entity query
+      description: |
+        Queries the knowledge graph for entities and relationships connected to a
+        specified entity. Supports configurable traversal depth, direction,
+        and relationship type filtering.
+      operationId: knowledgeGraphQuery
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphQuery"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphQueryResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/graph:
+    post:
+      summary: Graph traversal query
+      description: |
+        Traverse the knowledge graph from a starting entity. Returns connected
+        entities and relationships up to the specified depth.
+
+        Use this to discover related content that vector search might miss.
+        Example: starting from "Nightmare" reveals connected ships, skills, and modules.
+      operationId: graphTraversal
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphTraversalRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphTraversalResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/graph/search:
+    post:
+      summary: Entity search
+      description: |
+        Search for entities in the knowledge graph by name.
+        Case-insensitive contains search across all entity names.
+        Optionally filter by entity type.
+      operationId: entitySearch
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EntitySearchRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntitySearchResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/graph/entity/{entity_name}:
+    get:
+      summary: Get entity by name
+      description: Look up a specific entity by exact name match. Returns null if not found.
+      operationId: getEntity
+      tags:
+        - RAG
+      parameters:
+        - name: entity_name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Exact entity name to look up
+          example: "Nightmare"
+      responses:
+        "200":
+          description: Entity found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntityDetail"
+        "404":
+          description: Entity not found
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/query/graph/documents:
+    post:
+      summary: Graph traversal with document resolution
+      description: |
+        Traverse the knowledge graph from an entity and resolve connected entities
+        to actual documents in Milvus.
+
+        This is the primary graph endpoint for the hybrid search pipeline.
+        Combines Neo4j graph traversal with Milvus document lookup to return
+        searchable documents for all entities connected to the query entity.
+
+        Example: querying "Nightmare" returns its SDE document plus documents
+        for related ships, modules, skills, and fitting guides.
+      operationId: graphDocuments
+      tags:
+        - RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphDocumentRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphDocumentResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # =========================================================================
+  # Ingestion Endpoints
+  # =========================================================================
+  /data/v1/ingest/document:
+    post:
+      summary: Ingest a single document
+      description: |
+        Ingest a single document into the knowledge base. The document is chunked,
+        embedded, and stored in Milvus. Entity extraction runs in the background.
+
+        **Idempotent**: duplicate documents are detected and skipped based on
+        content hashing and source_id matching.
+      operationId: ingestDocument
+      tags:
+        - Ingestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngestRequest"
+      responses:
+        "200":
+          description: Successful response (or duplicate detected)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/ingest/batch:
+    post:
+      summary: Batch document ingestion
+      description: |
+        Ingest multiple documents in a single request. Each document is chunked,
+        embedded, and stored in Milvus. Duplicates are skipped.
+
+        **Idempotent**: each document is independently checked for duplicates.
+      operationId: ingestBatch
+      tags:
+        - Ingestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchIngestRequest"
+      responses:
+        "200":
+          description: Successful response with per-document results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchIngestResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # =========================================================================
+  # Management Endpoints
+  # =========================================================================
+  /data/v1/sources:
+    get:
+      summary: List sources
+      description: List available data sources with document counts.
+      operationId: listSources
+      tags:
+        - Management
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourcesResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /data/v1/stats:
+    get:
+      summary: Knowledge base statistics
+      description: Get statistics about the knowledge base including total documents, embedding model, and cache status.
+      operationId: getStats
+      tags:
+        - Management
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # =========================================================================
+  # Agent Endpoints
+  # =========================================================================
+  /v1/agent/chat:
+    post:
+      summary: Agent chat with tools
+      description: |
+        Chat with an AI agent that has access to RAG and memory tools for searching
+        and storing information. The agent can automatically use semantic search,
+        knowledge graph queries, hybrid search, and memory recall to provide
+        grounded answers with cited sources.
+      operationId: agentChat
+      tags:
+        - Agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentChatRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentChatResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/agent/tools:
+    get:
+      summary: List available agent tools
+      description: |
+        Returns the list of tools available to the AI agent in OpenAI-compatible format.
+        Currently includes RAG tools (semantic, keyword, hybrid, knowledge graph, graph traversal)
+        and memory tools (search, store, stats).
+      operationId: listAgentTools
+      tags:
+        - Agent
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/agent/health:
+    get:
+      summary: Agent health check
+      description: Check agent and LLM provider health status.
+      operationId: agentHealth
+      tags:
+        - Agent
+      responses:
+        "200":
+          description: Health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentHealthResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+# ===========================================================================
+# Components
+# ===========================================================================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+
+  schemas:
+    # =========================================================================
+    # Inference Schemas
+    # =========================================================================
+    ChatCompletionRequest:
+      type: object
+      required:
+        - model
+        - messages
+      properties:
+        model:
+          type: string
+          description: ID of the model to use
+          example: vllm-primary
+        messages:
+          type: array
+          description: A list of messages comprising the conversation
+          items:
+            $ref: "#/components/schemas/Message"
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 1
+          description: Sampling temperature
+        max_tokens:
+          type: integer
+          description: Maximum tokens to generate
+        stream:
+          type: boolean
+          default: false
+          description: Enable streaming responses
+        top_p:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Nucleus sampling parameter
+        stop:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: Stop sequences
+
+    Message:
+      type: object
+      required:
+        - role
+        - content
+      properties:
+        role:
+          type: string
+          enum: [system, user, assistant]
+          description: The role of the message author
+        content:
+          type: string
+          description: The content of the message
+
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: chatcmpl-abc123
+        object:
+          type: string
+          example: chat.completion
+        created:
+          type: integer
+          description: Unix timestamp
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+              message:
+                $ref: "#/components/schemas/Message"
+              finish_reason:
+                type: string
+                enum: [stop, length, tool_calls]
+        usage:
+          $ref: "#/components/schemas/Usage"
+
+    EmbeddingRequest:
+      type: object
+      required:
+        - model
+        - input
+      properties:
+        model:
+          type: string
+          description: ID of the model to use
+          example: Qwen/Qwen3-Embedding-0.6B
+        input:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: Text to embed
+        encoding_format:
+          type: string
+          enum: [float, base64]
+          default: float
+
+    EmbeddingResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          example: list
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              object:
+                type: string
+                example: embedding
+              index:
+                type: integer
+              embedding:
+                type: array
+                items:
+                  type: number
+                description: The embedding vector (1024 dimensions for Qwen/Qwen3-Embedding-0.6B)
+        model:
+          type: string
+        usage:
+          $ref: "#/components/schemas/Usage"
+
+    ModelsResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          example: list
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              object:
+                type: string
+                example: model
+              created:
+                type: integer
+              owned_by:
+                type: string
+
+    Usage:
+      type: object
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+
+    # =========================================================================
+    # RAG Schemas
+    # =========================================================================
+    SemanticQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query text
+          example: "How do I implement RAG?"
+        sources:
+          type: array
+          items:
+            type: string
+          description: Filter results to specific sources
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+          description: Maximum number of results to return
+        min_score:
+          type: number
+          default: 0.5
+          minimum: 0
+          maximum: 1
+          description: Minimum similarity score threshold
+        filters:
+          type: object
+          description: Additional metadata filters
+
+    SemanticQueryResult:
+      type: object
+      properties:
+        query:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        total:
+          type: integer
+        latency_ms:
+          type: number
+
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Chunk identifier
+        content:
+          type: string
+          description: Document chunk content
+        score:
+          type: number
+          description: Similarity score (0-1)
+        metadata:
+          type: object
+          properties:
+            source:
+              type: string
+            source_id:
+              type: string
+            title:
+              type: string
+            url:
+              type: string
+            content_type:
+              type: string
+
+    KeywordQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The keyword search query
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        offset:
+          type: integer
+          default: 0
+          description: Pagination offset
+        sources:
+          type: array
+          items:
+            type: string
+          description: Filter by source names
+        content_type:
+          type: string
+          description: Filter by content type
+        sort:
+          type: string
+          enum: [relevance, date]
+          default: relevance
+          description: Sort order
+
+    KeywordQueryResult:
+      type: object
+      properties:
+        query:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchResult"
+        total:
+          type: integer
+        latency_ms:
+          type: number
+
+    HybridQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query text
+          example: "How do I use Python SDK for embeddings?"
+        semantic_weight:
+          type: number
+          default: 0.7
+          minimum: 0
+          maximum: 1
+          description: Weight for semantic search results in final scoring
+        graph_weight:
+          type: number
+          default: 0.3
+          minimum: 0
+          maximum: 1
+          description: Weight for knowledge graph results in final scoring
+        sources:
+          type: array
+          items:
+            type: string
+          description: Filter results to specific sources
+        entity_boost:
+          type: array
+          items:
+            type: string
+          description: Entity names to boost in results ranking
+        limit:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        use_entity_extraction:
+          type: boolean
+          default: true
+          description: Whether to extract entities from the query before searching
+        game:
+          type: string
+          description: Game domain for entity extraction (e.g. 'eve', 'valorant')
+        use_graph:
+          type: boolean
+          default: true
+          description: Whether to use Neo4j graph traversal for entity expansion
+        graph_depth:
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 5
+          description: Maximum graph traversal depth when use_graph is enabled
+
+    HybridResultItem:
+      type: object
+      description: A single result from hybrid search with source attribution
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        source:
+          type: string
+        source_id:
+          type: string
+        content_type:
+          type: string
+        url:
+          type: string
+        score:
+          type: number
+          description: Combined relevance score (0-1)
+        origin:
+          type: string
+          enum: [vector, graph, both]
+          description: Source of this result
+
+    HybridQueryResult:
+      type: object
+      properties:
+        query:
+          type: string
+        entities_found:
+          type: array
+          items:
+            type: string
+          description: Entity names extracted from the query
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/HybridResultItem"
+        total:
+          type: integer
+        vector_count:
+          type: integer
+          description: Number of results from vector search
+        graph_count:
+          type: integer
+          description: Number of results from graph traversal
+        merged_count:
+          type: integer
+          description: Number of results after merging and deduplication
+        latency_ms:
+          type: number
+
+    # =========================================================================
+    # Graph Traversal Schemas (new P1.2 endpoints)
+    # =========================================================================
+    GraphTraversalRequest:
+      type: object
+      required:
+        - entity_name
+      properties:
+        entity_name:
+          type: string
+          description: Starting entity name for graph traversal
+          example: "Nightmare"
+        relationship_types:
+          type: array
+          items:
+            type: string
+          description: Filter by relationship types (e.g. 'requires', 'similar_to')
+        direction:
+          type: string
+          enum: [in, out, both]
+          default: both
+          description: Traversal direction
+        depth:
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 5
+          description: How many hops to traverse
+        limit:
+          type: integer
+          default: 50
+          minimum: 1
+          maximum: 200
+          description: Maximum entities to return
+
+    GraphTraversalResponse:
+      type: object
+      properties:
+        entity_name:
+          type: string
+          description: The starting entity name
+        entities_found:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntityDetail"
+        relationships:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelationshipDetail"
+        total_entities:
+          type: integer
+        total_relationships:
+          type: integer
+
+    EntityDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        entity_type:
+          type: string
+          description: Entity category (e.g. ship, module, skill)
+        properties:
+          type: object
+          additionalProperties: true
+
+    RelationshipDetail:
+      type: object
+      properties:
+        source_name:
+          type: string
+        target_name:
+          type: string
+        relationship_type:
+          type: string
+          description: Type of connection (e.g. requires, similar_to, has_module)
+        properties:
+          type: object
+          additionalProperties: true
+
+    EntitySearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: Search text (case-insensitive contains match)
+          example: "night"
+        entity_type:
+          type: string
+          description: Optional filter by entity type
+        limit:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+          description: Maximum results
+
+    EntitySearchResponse:
+      type: object
+      properties:
+        query:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/EntityDetail"
+        total:
+          type: integer
+
+    GraphDocumentRequest:
+      type: object
+      required:
+        - entity_name
+      properties:
+        entity_name:
+          type: string
+          description: Starting entity name
+          example: "Nightmare"
+        entity_type:
+          type: string
+          description: Optional entity type filter
+        relationship_types:
+          type: array
+          items:
+            type: string
+          description: Filter by relationship types
+        max_depth:
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 5
+          description: Maximum graph traversal depth
+        limit:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+          description: Maximum documents to return
+        resolve_documents:
+          type: boolean
+          default: true
+          description: Whether to resolve entity names to documents via Milvus
+
+    GraphDocumentResult:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        source:
+          type: string
+        source_id:
+          type: string
+        content_type:
+          type: string
+          example: "game_item"
+        url:
+          type: string
+        score:
+          type: number
+          description: Graph relationship score (1.0 = self, descending with distance)
+        relationship:
+          type: string
+          description: Relationship type to the query entity
+        related_entity:
+          type: string
+          description: Name of the related entity found in graph
+
+    GraphDocumentResponse:
+      type: object
+      properties:
+        entity_name:
+          type: string
+        entity_type:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphDocumentResult"
+        related_entities:
+          type: array
+          items:
+            type: string
+          description: Names of all related entities found
+        total:
+          type: integer
+
+    # =========================================================================
+    # Legacy Knowledge Graph (redirects internally to new graph traversal)
+    # =========================================================================
+    GraphQuery:
+      type: object
+      required:
+        - entity
+      properties:
+        entity:
+          type: string
+          description: The entity name to query
+          example: "Python"
+        relationship_types:
+          type: array
+          items:
+            type: string
+          description: Filter to specific relationship types
+        direction:
+          type: string
+          enum: [outgoing, incoming, both]
+          default: both
+        depth:
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 5
+          description: Graph traversal depth
+        limit:
+          type: integer
+          default: 50
+
+    GraphQueryResult:
+      type: object
+      properties:
+        entity:
+          type: string
+        entities:
+          type: array
+          items:
+            $ref: "#/components/schemas/Entity"
+        relationships:
+          type: array
+          items:
+            $ref: "#/components/schemas/Relationship"
+        latency_ms:
+          type: number
+
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        entity_type:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+
+    Relationship:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        relationship_type:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+
+    # =========================================================================
+    # Ingestion Schemas
+    # =========================================================================
+    DocumentMetadata:
+      type: object
+      required:
+        - source
+        - title
+      properties:
+        source:
+          type: string
+          description: Source identifier (e.g. 'manual', 'wikipedia', 'eve_sde')
+          example: "manual"
+        source_id:
+          type: string
+          description: Unique ID for deduplication (same source_id + source = duplicate)
+        title:
+          type: string
+          description: Document title
+        url:
+          type: string
+          description: Source URL (optional)
+        content_type:
+          type: string
+          description: Content category (e.g. 'article', 'game_item', 'docs')
+        tags:
+          type: array
+          items:
+            type: string
+          description: Categorization tags
+        custom:
+          type: object
+          additionalProperties: true
+          description: Arbitrary custom metadata
+
+    IngestRequest:
+      type: object
+      required:
+        - content
+        - metadata
+      properties:
+        content:
+          type: string
+          description: The full document text to ingest
+        metadata:
+          $ref: "#/components/schemas/DocumentMetadata"
+
+    IngestResponse:
+      type: object
+      properties:
+        document_id:
+          type: string
+          description: ID of the first chunk (empty if no content)
+        chunks_created:
+          type: integer
+          description: Number of chunks created (0 if duplicate)
+        status:
+          type: string
+          enum: [success, duplicate, empty, failed]
+          description: Ingestion result status
+        message:
+          type: string
+          description: Human-readable result message
+
+    BatchIngestRequest:
+      type: object
+      required:
+        - documents
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/IngestRequest"
+          description: Array of documents to ingest
+
+    BatchIngestResponse:
+      type: object
+      properties:
+        total_documents:
+          type: integer
+          description: Number of documents submitted
+        total_chunks:
+          type: integer
+          description: Total chunks created across all documents
+        successful:
+          type: integer
+          description: Number of documents successfully ingested
+        failed:
+          type: integer
+          description: Number of documents that failed
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/IngestResponse"
+          description: Per-document result details
+
+    # =========================================================================
+    # Management Schemas
+    # =========================================================================
+    SourcesResponse:
+      type: object
+      properties:
+        sources:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              enabled:
+                type: boolean
+              document_count:
+                type: integer
+        total_documents:
+          type: integer
+
+    StatsResponse:
+      type: object
+      properties:
+        total_documents:
+          type: integer
+          description: Total documents in the knowledge base
+        embedding_model:
+          type: string
+          example: "Qwen/Qwen3-Embedding-0.6B"
+        embedding_dimension:
+          type: integer
+          example: 1024
+        cache_enabled:
+          type: boolean
+
+    # =========================================================================
+    # Agent Schemas
+    # =========================================================================
+    AgentChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: The user message
+        system_prompt:
+          type: string
+          description: Optional system prompt to guide the agent
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+          description: Previous conversation history
+        temperature:
+          type: number
+          default: 0.7
+          minimum: 0
+          maximum: 2
+        max_tokens:
+          type: integer
+          default: 1024
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+
+    AgentChatResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        response:
+          type: string
+          description: The agent's response text
+        tool_calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolCall"
+          description: Tools used by the agent to generate the response
+        error:
+          type: string
+
+    ToolCall:
+      type: object
+      properties:
+        tool:
+          type: string
+          description: Name of the tool called
+        arguments:
+          type: object
+          description: Arguments passed to the tool
+        result:
+          type: object
+          description: Result returned by the tool
+
+    ToolSchema:
+      type: object
+      description: OpenAI-compatible tool definition
+      properties:
+        name:
+          type: string
+          description: Tool name
+        description:
+          type: string
+          description: What the tool does
+        parameters:
+          type: object
+          description: JSON Schema for the tool's parameters
+
+    ToolsResponse:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolSchema"
+          description: |
+            Available tools. Currently includes:
+            - **SemanticSearchTool**: Semantic vector search across the knowledge base
+            - **KnowledgeGraphTool**: Entity relationship queries in the knowledge graph
+            - **HybridSearchTool**: Combined semantic + graph search with entity extraction
+            - **MemorySearchTool**: Search companion memory (vector + keyword + graph + KB)
+            - **MemoryStoreTool**: Store facts for future recall
+            - **MemoryStatsTool**: Check memory system health and population
+        count:
+          type: integer
+          description: Number of available tools
+
+    AgentHealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        providers:
+          type: object
+          properties:
+            vllm:
+              type: object
+              properties:
+                reachable:
+                  type: boolean
+                error:
+                  type: string
+            openrouter:
+              type: object
+              properties:
+                reachable:
+                  type: boolean
+                enabled:
+                  type: boolean
+        degraded_mode:
+          type: boolean
+
+    # =========================================================================
+    # Error Schema
+    # =========================================================================
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+            code:
+              type: string
+            param:
+              type: string
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+tags:
+  - name: Chat
+    description: OpenAI-compatible chat completion endpoint
+  - name: Embeddings
+    description: Vector embedding generation
+  - name: Models
+    description: Available model information
+  - name: RAG
+    description: |
+      Retrieval-Augmented Generation endpoints for searching the knowledge base.
+      Includes semantic search, keyword search, hybrid search, knowledge graph queries,
+      and new graph traversal with document resolution.
+  - name: Ingestion
+    description: |
+      Document and batch ingestion endpoints with idempotent duplicate detection.
+      Documents are chunked, embedded, and stored in Milvus with optional
+      background entity extraction.
+  - name: Management
+    description: Source listing, knowledge base statistics, and health endpoints.
+  - name: Agent
+    description: |
+      AI agent with built-in RAG and memory tools. The agent can autonomously
+      search the knowledge base, recall past conversations, and store facts.
